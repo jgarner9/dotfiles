@@ -5,7 +5,7 @@ case $- in
 esac
 
 # Path to your oh-my-bash installation.
-export OSH='/home/jgarner/.oh-my-bash'
+export OSH="$HOME/.oh-my-bash"
 
 export EDITOR="nvim"
 
