@@ -24,6 +24,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.opt.lazyredraw = true
 vim.opt.updatetime = 300
+vim.opt.number = true
 
 vim.loader.enable()
 
