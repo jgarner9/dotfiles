@@ -17,12 +17,13 @@ return {
 			hide_gitignored = false,
 			never_show = ".DS_Store"
 		},
+		position = "float"
 
 	},
 	config = function()
 		require("neo-tree").setup({
 			window = {
-				position = "current"
+				position = "float"
 			},
 			event_handlers = {
 				{
@@ -38,6 +39,6 @@ return {
 				},
 			},
 		})
-		vim.keymap.set("n", "<leader>e", "<Cmd>Neotree position=current<CR>")
+		vim.keymap.set("n", "<leader>e", "<Cmd>Neotree filesystem reveal float<CR>")
 	end
 }
