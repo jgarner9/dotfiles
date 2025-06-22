@@ -21,9 +21,23 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.opt.lazyredraw = true
 vim.opt.updatetime = 300
-vim.opt.number = true
-
+vim.opt.number = false
+vim.opt.relativenumber = false
+vim.opt.signcolumn = "no"
 vim.loader.enable()
+
+-- Enable line numbers only for code-like filetypes
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = {
+		"c", "cpp", "python", "javascript", "typescript", "lua", "go", "rust",
+		"java", "sh", "bash", "zsh", "php", "ruby", "html", "css", "scss", "json",
+		"yaml", "toml", "markdown"
+	},
+	callback = function()
+		vim.wo.number = true
+		vim.wo.relativenumber = true
+	end,
+})
 
 -- include custom keymaps
 -- vim.keymap.set("n", "<leader>ttt", "<cmd>echo 'test'<cr>")
@@ -34,6 +48,7 @@ vim.keymap.set("n", "<leader>wl", "<C-w>l")
 vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>")
 vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>")
 vim.keymap.set("n", "<leader>wq", "<cmd>close<cr>")
+vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>ww", "<cmd>wq<cr>")
 vim.keymap.set("n", "<leader>qq", "<cmd>q!<cr>")
 vim.keymap.set("n", "<cr>", "o<esc>")
