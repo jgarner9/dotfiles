@@ -1,4 +1,4 @@
---  wjootstrap lazy.nvim
+--  Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -13,6 +13,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 		os.exit(1)
 	end
 end
+
+-- set options
 vim.opt.rtp:prepend(lazypath)
 
 vim.g.mapleader = " "
@@ -36,6 +38,15 @@ vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		vim.wo.number = true
 		vim.wo.relativenumber = true
+	end,
+})
+
+-- set line number highlights and colors (after color scheme loads)
+vim.api.nvim_create_autocmd("ColorScheme", {
+	callback = function()
+		vim.api.nvim_set_hl(0, "LineNr", { fg = "#897379", bold = true, bg = "NONE" })
+		vim.api.nvim_set_hl(0, "SignColumn", { bold = true, bg = "NONE" })
+		vim.api.nvim_set_hl(0, "CursorLineNr", { bold = true, bg = "NONE" })
 	end,
 })
 
