@@ -42,4 +42,5 @@
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
 theme=rose-pine-moon
-font=12
+font-size=15
+font-family=Source Code Pro for Powerline
