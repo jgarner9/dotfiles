@@ -22,7 +22,13 @@ return {
 
 		for i, server in ipairs(servers) do
 			lspconfig[server].setup({
-				filetypes = { serverFileTypes[i] }
+				filetypes = { serverFileTypes[i] },
+				on_attach = function(_, bufnr)
+					vim.keymap.set("n", "K", vim.lsp.buf.hover, {
+						buffer = bufnr,
+						desc = "Show hover documentation"
+					})
+				end
 			})
 		end
 	end,
