@@ -3,7 +3,7 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
 	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-	if wjim.v.shell_error ~= 0 then
+	if vim.v.shell_error ~= 0 then
 		vim.api.nvim_echo({
 			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
 			{ out,                            "WarningMsg" },
@@ -15,6 +15,17 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 
 -- set options
+vim.diagnostic.config({
+	virtual_text = true,
+	virutal_text = {
+		spacing = 4,
+		prefix = '●',
+	},
+	signs = false,
+	underline = true,
+	update_in_insert = false,
+	severity_sort = true,
+})
 vim.opt.rtp:prepend(lazypath)
 
 vim.g.mapleader = " "
@@ -22,10 +33,8 @@ vim.g.maplocalleader = "\\"
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.opt.lazyredraw = true
-vim.opt.updatetime = 300
 vim.opt.number = false
 vim.opt.relativenumber = false
-vim.opt.signcolumn = "no"
 vim.loader.enable()
 
 -- Enable line numbers only for code-like filetypes
@@ -45,7 +54,6 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("ColorScheme", {
 	callback = function()
 		vim.api.nvim_set_hl(0, "LineNr", { fg = "#897379", bold = true, bg = "NONE" })
-		vim.api.nvim_set_hl(0, "SignColumn", { bold = true, bg = "NONE" })
 		vim.api.nvim_set_hl(0, "CursorLineNr", { bold = true, bg = "NONE" })
 	end,
 })
