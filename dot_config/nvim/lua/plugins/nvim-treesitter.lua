@@ -4,7 +4,7 @@ return {
 	opts = {
 		branch = "master",
 		lazy = false,
-		build = ":TSUpdate",
+		build = ":TSInstall",
 		opts = {
 			ensure_installed = { "c", "lua", "vim", "query", "markdown", "markdown_inline", "python", "go", "gomod", "bash", "javascript" },
 			auto_install = true,

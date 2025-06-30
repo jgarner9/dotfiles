@@ -77,13 +77,14 @@ vim.keymap.set("n", "<leader>ww", "<cmd>wq<cr>")
 vim.keymap.set("n", "<leader>qq", "<cmd>q!<cr>")
 -- QoL keymaps
 vim.keymap.set("n", "<cr>", "o<esc>")
--- la Terminal
-vim.keymap.set("n", "<leader>\\", "<cmd>split<cr><C-w>j<cmd>terminal<cr>a")
 -- Lspsaga keymaps
+vim.keymap.set("n", "<A-d>", "<cmd>Lspsaga term_toggle<cr>")
+vim.keymap.set("t", "<A-d>", "<cmd>Lspsaga term_toggle<cr>")
 vim.keymap.set("n", "<leader>d", "<cmd>Lspsaga peek_definition<cr>")
 vim.keymap.set("n", "<leader>g", "<cmd>Lspsaga goto_definition<cr>")
 vim.keymap.set("n", "<leader>lf", "<cmd>Lspsaga finder<cr>")
-
+vim.keymap.set("n", "<leader>r", "<cmd>Lspsaga rename<cr>")
+vim.keymap.set("n", "<leader>c", "gcc")
 -- Setup lazy.nvim
 require("lazy").setup({
 	spec = {
