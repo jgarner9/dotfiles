@@ -41,6 +41,6 @@
 # # which is explained in the docs for that config option.
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
-theme=Apple System Colors
+theme=tokyonight_night
 font-size=12
 font-family=Source Code Pro for Powerline
