@@ -4,6 +4,7 @@ return {
 	config = function()
 		require('lspsaga').setup({
 			ui = {
+				border = "rounded",
 				code_action = ""
 			}
 		})
