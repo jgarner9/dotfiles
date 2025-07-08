@@ -84,6 +84,8 @@ vim.keymap.set("n", "<leader>d", "<cmd>Lspsaga peek_definition<cr>")
 vim.keymap.set("n", "<leader>g", "<cmd>Lspsaga goto_definition<cr>")
 vim.keymap.set("n", "<leader>lf", "<cmd>Lspsaga finder<cr>")
 vim.keymap.set("n", "<leader>r", "<cmd>Lspsaga rename<cr>")
+vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<cr>")
+
 vim.keymap.set("n", "<leader>c", "gcc")
 -- Setup lazy.nvim
 require("lazy").setup({

@@ -1,23 +1,16 @@
 return {
-	"Saghen/blink.cmp",
+	"saghen/blink.cmp",
 	event = "InsertEnter",
-	dependencies = { "rafamadriz/friendly-snippets" },
-
-	version = "1.*",
-
-	---@module "blink.cmp"
+	dependencies = "rafamadriz/friendly-snippets",
+	version = "*",
+	build = "cargo build --release",
 	opts = {
 		keymap = { preset = "enter" },
-
-		appearance = {
-			nerd_font_variant = "mono"
+		appearance = { use_nvim_cmp_as_default = true },
+		sources = { default = { "lsp", "path", "snippets", "buffer" } },
+		completion = {
+			documentation = { auto_show = true },
+			ghost_text = { enabled = true },
 		},
-
-		completion = { documentation = { auto_show = false } },
-		sources = {
-			default = { "lsp", "path", "snippets", "buffer" },
-		},
-		fuzzy = { implementation = "prefer_rust" },
 	},
-	opts_extend = { "sources.default" },
 }
