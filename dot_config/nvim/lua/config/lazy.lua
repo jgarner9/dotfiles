@@ -71,10 +71,6 @@ vim.keymap.set("n", "<leader>wv", "<cmd>vsplit<cr>")
 vim.keymap.set("n", "<leader>ws", "<cmd>split<cr>")
 vim.keymap.set("n", "<leader>wq", "<cmd>close<cr>")
 vim.keymap.set("n", "<leader>wc", "<cmd>bd<cr>")
--- saving and quitting
-vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
-vim.keymap.set("n", "<leader>ww", "<cmd>wq<cr>")
-vim.keymap.set("n", "<leader>qq", "<cmd>q!<cr>")
 -- QoL keymaps
 vim.keymap.set("n", "<cr>", "o<esc>")
 -- Lspsaga keymaps
