@@ -1,47 +1,28 @@
 return {
-	{
-		"williamboman/mason.nvim",
-		config = function()
-			require("mason").setup({
-				ui = {
-					icons = {
-						package_installed = "✓",
-						package_pending = "➜",
-						package_uninstalled = "✗",
-					},
-				},
-				ensure_installed = {
-					"prettier",
-					"prettierd",
-					"stylua",
-					"isort",
-					"black",
-					"goimports",
-					"gofumpt",
-					"shfmt",
-					"clang_format",
-				},
-				automatic_installation = true,
-			})
-		end,
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		dependencies = { "williamboman/mason.nvim" },
-		config = function()
-			require("mason-lspconfig").setup({
-				ensure_installed = {
-					"lua_ls",
-					"pyright",
-					"ts_ls",
-					"gopls",
-					"clangd",
-					"bashls",
-					"html",
-					"cssls",
-				},
-				automatic_installation = true,
-			})
-		end,
-	},
+  "williamboman/mason.nvim",
+  opts = {
+    ensure_installed = {
+      "ruff",
+      "mypy",
+      "eslint_d",
+      "luacheck",
+      "html",
+      "cssls",
+      "ts_ls",
+      "gopls",
+      "clangd",
+      "pyright",
+      "htmx-lsp",
+      "stylua",
+      "prettier",
+      "prettierd",
+      "goimports",
+      "gofmt",
+      "isort",
+      "black",
+      "clang-format",
+      "codespell",
+      "trim_whitespace",
+    },
+  },
 }
