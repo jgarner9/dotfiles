@@ -12,6 +12,7 @@ keymap("n", "<leader>wl", "<C-w>l")
 keymap("n", "<leader>wv", "<cmd>vsplit<cr>")
 keymap("n", "<leader>ws", "<cmd>split<cr>")
 keymap("n", "<cr>", "o<esc>")
+keymap("n", "!", ":!")
 
 keymap({ "n", "t" }, "<A-i>", function()
   require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
