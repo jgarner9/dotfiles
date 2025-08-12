@@ -1,8 +1,7 @@
 require "nvchad.mappings"
-
--- add yours here
-
 local keymap = vim.keymap.set
+local harpoon = require "harpoon"
+
 keymap("n", ";", ":", { desc = "CMD enter command mode" })
 keymap("i", "jk", "<ESC>")
 keymap("n", "<leader>wh", "<C-w>h")
@@ -20,4 +19,23 @@ end)
 
 keymap("n", "<A-c>", function()
   require "nvchad.lsp.renamer"()
+end)
+
+keymap("n", "<leader>a", function()
+  harpoon:list():add()
+end)
+keymap("n", "<C-e>", function()
+  harpoon.ui:toggle_quick_menu(harpoon:list())
+end)
+keymap("n", "<C-h>", function()
+  harpoon:list():select(1)
+end)
+keymap("n", "<C-j>", function()
+  harpoon:list():select(2)
+end)
+keymap("n", "<C-k>", function()
+  harpoon:list():select(3)
+end)
+keymap("n", "<C-l>", function()
+  harpoon:list():select(4)
 end)
