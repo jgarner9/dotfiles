@@ -1,0 +1,36 @@
+# source plugins
+if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# environment variables
+export EDITOR="nvim"
+export BROWSER="zen"
+
+# MR JASON'S SUPER AWESOME ALIASES
+alias tsesh="tmux new -s"
+alias tmls="tmux ls"
+alias tat="tmux attach -t"
+alias ls="ls --color -F"
+alias spm="sudo pacman"
+
+if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+  export TERM=xterm-256color
+fi
+
+# add prompt theming
+autoload -Uz promptinit
+promptinit
+prompt fade white grey
+
+# add autocompletion
+autoload -Uz compinit
+compinit
+zstyle ':completion:*' menu select
+zstyle ':completion:*' rehash true
+
+# setup zoxide
+eval "$(zoxide init zsh --cmd cd)"
