@@ -1,5 +1,6 @@
 require "nvchad.options"
 
+vim.o.mouse = "a"
 vim.opt.lazyredraw = true
 vim.opt.number = false
 vim.opt.relativenumber = false
