@@ -1,0 +1,30 @@
+theme = "gruvchest"
+
+[editor]
+line-number = "relative"
+cursorline = true
+continue-comments = false
+bufferline = "multiple"
+end-of-line-diagnostics = "hint"
+
+[editor.statusline]
+left = ["separator", "mode", "spinner", "separator", "file-name", "read-only-indicator", "file-modification-indicator", "version-control", "separator"]
+center = ["separator", "position", "spacer", "total-line-numbers", "separator"]
+right = ["separator", "diagnostics", "selections", "register", "separator", "file-encoding"]
+
+[editor.file-picker]
+hidden = false
+
+[editor.indent-guides]
+render = true
+
+[editor.inline-diagnostics]
+cursor-line = "warning"
+
+
+#remapping keys
+[keys.normal]
+"ret" = ["open_below", "normal_mode"]
+
+[keys.insert.j]
+k = "normal_mode"

@@ -1,0 +1,38 @@
+python:
+- pylsp
+- pyrefly
+- ruff
+- jedi
+- black
+
+golang:
+- goimports
+- dlv
+- gopls
+- golangci-lint-lsp
+
+javascript/typescript:
+- typescript-language-server
+- prettier
+
+html:
+- vscode-html-language-server
+- superhtml
+- prettier
+
+css:
+- vscode-css-language-server
+- prettier
+
+json:
+- vscode-json-language-server
+- prettier
+
+bash:
+- bash-language-server
+- shfmt
+
+c:
+- clang-format
+- clangd
+- lldpd
