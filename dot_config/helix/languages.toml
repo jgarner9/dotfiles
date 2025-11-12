@@ -1,0 +1,76 @@
+[language-server.gopls.config]
+gofumpt = true
+
+[[language]]
+name = "go"
+auto-format = true
+formatter = { command = "goimports" }
+
+[[language]]
+name = "python"
+auto-format = true
+language-servers = ["pylsp", "pyrefly", "ruff", "jedi"]
+formatter = { command = "black", args = ["--quiet", "-"] }
+
+[[language]]
+name = "javascript"
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "typescript"
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "tsx"
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "html"
+formatter = { command = 'prettier', args = ["--parser", "html"] }
+auto-format = true
+
+[[language]]
+name = "css"
+formatter = { command = 'prettier', args = ["--parser", "css"] }
+auto-format = true
+
+[[language]]
+name = "scss"
+formatter = { command = 'prettier', args = ["--parser", "scss"] }
+auto-format = true
+
+[[language]]
+name = "c"
+file-types = ["c", "h"]
+formatter = { command = 'clang-format' }
+auto-format = true
+
+[[language]]
+name = "cpp"
+file-types = ["cpp", "cc", "cxx", "hpp", "hcc", "hxx"]
+formatter = { command = 'clang-format' }
+auto-format = true
+
+[[language]]
+name = "bash"
+indent = { tab-width = 4, unit = "\t" }
+formatter = { command = "shfmt" }
+auto-format = true
+
+[[language]]
+name = "json"
+formatter = { command = 'prettier', args = ["--parser", "json"] }
+auto-format = true
+
+[[language]]
+name = "jsonc"
+formatter = { command = 'prettier', args = ["--parser", "jsonc"] }
+auto-format = true
+
+[[language]]
+name = "markdown"
+formatter = { command = 'prettier', args = ["--parser", "markdown"] }
+auto-format = true

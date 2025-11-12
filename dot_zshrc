@@ -1,14 +1,10 @@
 # source plugins
 if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
-
-# environment variables
-export EDITOR="zed"
-export BROWSER="zen"
 
 # MR JASON'S SUPER AWESOME ALIASES
 alias tsesh="tmux new -s"
@@ -17,10 +13,6 @@ alias tat="tmux attach -t"
 alias ls="ls --color -F"
 alias spm="sudo pacman"
 alias cat="bat"
-
-if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
-  export TERM=xterm-256color
-fi
 
 # add autocompletion
 autoload -Uz compinit
@@ -38,10 +30,13 @@ zstyle ':vcs_info:git:*' formats 'on %F{magenta}git:%F{cyan}(%b)%f%c%u'
 zstyle ':vcs_info:git:*' actionformats 'on %F{magenta}git:%F{cyan}(%b|%a)%f%c%u'
 
 precmd() {
-  # Get git info
-  vcs_info
+	# Get git info
+	vcs_info
 }
 
 PROMPT='%F{cyan}%n%f@%F{blue}%m%f in %F{yellow}%~%f ${vcs_info_msg_0_}
 '
 PROMPT+='%(?.%F{green}.%F{red})❯%f '
+
+. "$HOME/.local/bin/env"
+. "$HOME/.zprofile"
