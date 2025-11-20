@@ -38,5 +38,7 @@ PROMPT='%F{cyan}%n%f@%F{blue}%m%f in %F{yellow}%~%f ${vcs_info_msg_0_}
 '
 PROMPT+='%(?.%F{green}.%F{red})❯%f '
 
-. "$HOME/.local/bin/env"
+if [[ -f $HOME/.local/bin/env ]]; then
+	. "$HOME/.local/bin/env"
+fi
 . "$HOME/.zprofile"
