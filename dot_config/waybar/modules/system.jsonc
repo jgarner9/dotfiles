@@ -1,0 +1,20 @@
+{
+  "cpu": {
+    "tooltip": true,
+    "interval": 10,
+    "format": "󰍛 <span size='11pt'>{usage}%</span>",
+    "states": {
+      "warning": 75,
+      "critical": 90,
+    },
+  },
+  "temperature": {
+    "tooltip": true,
+    "interval": 10,
+    "thermal-zone": 0,
+    "critical-threshold": 80,
+    "format": "{icon} <span size='11pt'>{temperatureC}°C</span>",
+    "format-critical": "<span size='12pt'>󱗗 </span><span size='11pt'>{temperatureC}°C</span>",
+    "format-icons": ["", "", ""],
+  },
+}

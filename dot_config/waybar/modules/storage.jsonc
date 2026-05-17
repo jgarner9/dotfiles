@@ -1,0 +1,21 @@
+{
+  "disk": {
+    "tooltip": true,
+    "interval": 3600,
+    "path": "/",
+    "format": "󱙋 <span size='11pt'>{used}</span>",
+    "states": {
+      "warning": 80,
+      "critical": 90,
+    },
+  },
+  "memory": {
+    "tooltip": true,
+    "interval": 15,
+    "format": "  <span size='11pt'>{used}G / {percentage}%</span>",
+    "states": {
+      "warning": 75,
+      "critical": 85,
+    },
+  },
+}
