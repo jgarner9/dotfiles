@@ -1,0 +1,7 @@
+{
+  "clock": {
+    "timezone": "America/Denver",
+    "format": "󰃱 <span size='11pt'> {:%H:%M | %B %d, %Y}</span>",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+  },
+}
