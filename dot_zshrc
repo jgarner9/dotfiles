@@ -43,12 +43,7 @@ if [[ -f $HOME/.local/bin/env ]]; then
 fi
 . "$HOME/.zprofile"
 
-export ZELLIJ_AUTO_ATTACH=true
-export ZELLIJ_AUTO_EXIT=true
-
-if command -v zellij &> /dev/null; then
-  eval "$(zellij setup --generate-auto-start zsh)"
-fi
+eval "$(zellij setup --generate-auto-start zsh)"
 
 eval "$(zoxide init --cmd cd zsh)"
 
