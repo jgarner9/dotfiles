@@ -7,9 +7,6 @@ if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; 
 fi
 
 # MR JASON'S SUPER AWESOME ALIASES
-alias tsesh="tmux new -s"
-alias tmls="tmux ls"
-alias tat="tmux attach -t"
 alias ls="ls --color -F"
 alias spm="sudo pacman"
 alias cat="bat"
@@ -43,6 +40,9 @@ if [[ -f $HOME/.local/bin/env ]]; then
 fi
 . "$HOME/.zprofile"
 
+# exit the shell when zellij exits, so closing zellij closes the window
+# (pairs with on_force_close "quit" in the zellij config)
+export ZELLIJ_AUTO_EXIT=true
 eval "$(zellij setup --generate-auto-start zsh)"
 
 eval "$(zoxide init --cmd cd zsh)"
