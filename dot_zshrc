@@ -1,10 +1,8 @@
-# source plugins
-if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
-if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
+# history
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 
 # MR JASON'S SUPER AWESOME ALIASES
 alias tsesh="tmux new -s"
@@ -12,41 +10,77 @@ alias tmls="tmux ls"
 alias tat="tmux attach -t"
 alias ls="ls --color -F"
 alias spm="sudo pacman"
-alias cat="bat"
+if command -v bat >/dev/null; then
+	alias cat="bat"
+fi
 
 # add autocompletion
-autoload -Uz compinit
 zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
-compinit
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# only do the full (slow) compinit scan if the dump is older than 24h
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+	compinit
+else
+	compinit -C
+fi
 
 # customize prompt
 autoload -U colors && colors
 autoload -U vcs_info
+autoload -Uz add-zsh-hook
 
 setopt PROMPT_SUBST
 zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' stagedstr '%F{green}+%f'
+zstyle ':vcs_info:git:*' unstagedstr '%F{red}*%f'
 zstyle ':vcs_info:git:*' formats 'on %F{magenta}git:%F{cyan}(%b)%f%c%u'
 zstyle ':vcs_info:git:*' actionformats 'on %F{magenta}git:%F{cyan}(%b|%a)%f%c%u'
 
-precmd() {
-	# Get git info
-	vcs_info
-}
+add-zsh-hook precmd vcs_info
 
 PROMPT='%F{cyan}%n%f@%F{blue}%m%f in %F{yellow}%~%f ${vcs_info_msg_0_}
 '
 PROMPT+='%(?.%F{green}.%F{red})❯%f '
 
+# search history by what's already typed instead of plain scrolling
+bindkey '^[[A' history-beginning-search-backward
+bindkey '^[[B' history-beginning-search-forward
+
 if [[ -f $HOME/.local/bin/env ]]; then
 	. "$HOME/.local/bin/env"
 fi
-. "$HOME/.zprofile"
 
-eval "$(zellij setup --generate-auto-start zsh)"
+if command -v zellij >/dev/null; then
+	eval "$(zellij setup --generate-auto-start zsh)"
+fi
 
-eval "$(zoxide init --cmd cd zsh)"
+if command -v zoxide >/dev/null; then
+	eval "$(zoxide init --cmd cd zsh)"
+fi
 
+# lazy-load nvm: shells start fast, nvm loads on first use of nvm/node/npm/npx
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+	_load_nvm() {
+		unset -f nvm node npm npx _load_nvm
+		\. "$NVM_DIR/nvm.sh"
+		[[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"
+	}
+	nvm() { _load_nvm && nvm "$@" }
+	node() { _load_nvm && node "$@" }
+	npm() { _load_nvm && npm "$@" }
+	npx() { _load_nvm && npx "$@" }
+fi
+
+# source plugins (syntax-highlighting must stay last)
+if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
