@@ -13,12 +13,15 @@
       ]
     },
     "on-click": "pavucontrol",
+    "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
     "tooltip-format": "Output: {volume}%"
   },
   "pulseaudio#microphone": {
     "format": "{format_source}",
     "format-source": "",
-    "format-source-muted": ""
+    "format-source-muted": "",
+    "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+    "tooltip-format": "Mic: {source_volume}%"
   },
   "pulseaudio/slider": {
     "min": 0,
