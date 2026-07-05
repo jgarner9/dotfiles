@@ -250,7 +250,7 @@ load_plugins {
 //   - detach (Default)
 //   - quit
 //
-// on_force_close "quit"
+on_force_close "quit"
 
 //  Send a request for a simplified ui (without arrow fonts) to plugins
 //  Options:
@@ -288,7 +288,7 @@ load_plugins {
 //   - true (default)
 //   - false
 //
-// session_serialization false
+session_serialization false
 
 // Whether pane viewports are serialized along with the session, default is false
 // (Requires restart)
@@ -334,7 +334,7 @@ theme "gruvbox-dark"
 // Default: "default"
 // (Requires restart)
 //
-// default_layout "compact"
+default_layout "compact"
 
 // Choose the mode that zellij uses when starting up.
 // Default: normal
@@ -369,6 +369,11 @@ theme "gruvbox-dark"
 // copy_command "xclip -selection clipboard" // x11
 // copy_command "wl-copy"                    // wayland
 // copy_command "pbcopy"                     // osx
+{{ if eq .chezmoi.os "darwin" -}}
+copy_command "pbcopy"
+{{- else -}}
+copy_command "wl-copy"
+{{- end }}
 
 // Choose the destination for copied text
 // Allows using the primary selection buffer (on x11/wayland) instead of the system clipboard.
@@ -387,7 +392,7 @@ theme "gruvbox-dark"
 // Path to the default editor to use to edit pane scrollbuffer
 // Default: $EDITOR or $VISUAL
 //
-// scrollback_editor "/usr/bin/vim"
+scrollback_editor "nvim"
 
 // When attaching to an existing session with other users,
 // should the session be mirrored (true)
@@ -499,7 +504,7 @@ theme "gruvbox-dark"
 // Whether to show release notes on first version run
 // Default: true
 //
-// show_release_notes false
+show_release_notes false
 
 // Whether to enable mouse hover effects and pane grouping functionality
 // Default: true
