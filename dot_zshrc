@@ -5,9 +5,6 @@ SAVEHIST=10000
 setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 
 # MR JASON'S SUPER AWESOME ALIASES
-alias tsesh="tmux new -s"
-alias tmls="tmux ls"
-alias tat="tmux attach -t"
 alias ls="ls --color -F"
 alias spm="sudo pacman"
 if command -v bat >/dev/null; then
@@ -56,6 +53,9 @@ if [[ -f $HOME/.local/bin/env ]]; then
 fi
 
 if command -v zellij >/dev/null; then
+	# exit the shell when zellij exits, so closing zellij closes the window
+	# (pairs with on_force_close "quit" in the zellij config)
+	export ZELLIJ_AUTO_EXIT=true
 	eval "$(zellij setup --generate-auto-start zsh)"
 fi
 
