@@ -1,0 +1,12 @@
+# Hyprland and waybar configs are only useful on Arch Linux (and derivatives)
+{{ if ne .chezmoi.os "linux" }}
+.config/hypr
+.config/hypr/**
+.config/waybar
+.config/waybar/**
+{{ else if not (or (eq .chezmoi.osRelease.id "arch") (contains "arch" (.chezmoi.osRelease.idLike | default ""))) }}
+.config/hypr
+.config/hypr/**
+.config/waybar
+.config/waybar/**
+{{ end }}
