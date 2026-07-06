@@ -1,5 +1,19 @@
 return {
   {
+    "folke/sidekick.nvim",
+    keys = {
+      -- open Claude Code directly; sidekick runs the `claude` CLI in a
+      -- terminal, so this uses the Claude subscription, not API billing
+      {
+        "<leader>ac",
+        function()
+          require("sidekick.cli").toggle({ name = "claude", focus = true })
+        end,
+        desc = "Sidekick Toggle Claude",
+      },
+    },
+  },
+  {
     "folke/snacks.nvim",
     opts = {
       explorer = {
