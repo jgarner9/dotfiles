@@ -32,6 +32,7 @@ require("lazy").setup({
   checker = {
     enabled = true, -- check for plugin updates periodically
     notify = false, -- notify on update
+    frequency = 86400, -- once a day instead of hourly; the check spawns a git process per plugin (~50)
   }, -- automatically check for plugin updates
   performance = {
     rtp = {
