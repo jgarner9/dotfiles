@@ -4,9 +4,13 @@
 .config/hypr/**
 .config/waybar
 .config/waybar/**
+.config/Documents
+.config/Documents/**
 {{ else if not (or (eq .chezmoi.osRelease.id "arch") (contains "arch" (.chezmoi.osRelease.idLike | default ""))) }}
 .config/hypr
 .config/hypr/**
 .config/waybar
 .config/waybar/**
+.config/Documents
+.config/Documents/**
 {{ end }}
