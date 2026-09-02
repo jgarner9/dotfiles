@@ -1,0 +1,10 @@
+Host archie
+  HostName archie.husky-cobia.ts.net
+  User jgarner
+  IdentityFile ~/.ssh/id_ed25519_archie
+  IdentitiesOnly yes
+
+Host *
+  IgnoreUnknown UseKeychain
+  UseKeychain yes
+  AddKeysToAgent yes
