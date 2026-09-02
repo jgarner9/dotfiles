@@ -84,3 +84,9 @@ fi
 if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
 	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+
+# Added by cua-driver-rs installer — see https://github.com/trycua/cua
+export PATH="/Users/jgarner/.local/bin:$PATH"
