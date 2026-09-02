@@ -4,6 +4,19 @@ Host archie
   IdentityFile ~/.ssh/id_ed25519_archie
   IdentitiesOnly yes
 
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_git
+  IdentitiesOnly yes
+
+Host gogs
+  HostName archie.husky-cobia.ts.net
+  Port 2222
+  User git
+  IdentityFile ~/.ssh/id_ed25519_git
+  IdentitiesOnly yes
+
 Host *
   IgnoreUnknown UseKeychain
   UseKeychain yes
