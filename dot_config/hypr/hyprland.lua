@@ -16,8 +16,10 @@
 ------------------
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
-hl.monitor({ output = "DP-2", mode = "2560x1440@59.951", position = "2560x0", scale = 1, transform = 3 })
-hl.monitor({ output = "DP-4", mode = "preferred", position = "0x0", scale = 1 })
+-- Matched by description since DP-N numbering changes between boots.
+-- ASUS PA278CV is rotated 90° CCW (transform 3 = 270°).
+hl.monitor({ output = "desc:ASUSTek COMPUTER INC PA278CV S1LMQS028060", mode = "2560x1440@59.951", position = "2560x0", scale = 1, transform = 3 })
+hl.monitor({ output = "desc:LG Electronics LG ULTRAGEAR 312NTPC2F520", mode = "preferred", position = "0x0", scale = 1 })
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto" })
 
 ---------------------
