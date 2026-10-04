@@ -11,28 +11,7 @@ return {
       },
     },
   },
-  {
-    "folke/sidekick.nvim",
-    -- run CLI sessions inside zellij so they survive nvim restarts
-    opts = {
-      cli = {
-        mux = {
-          enabled = true,
-        },
-      },
-    },
-    keys = {
-      -- open Claude Code directly; sidekick runs the `claude` CLI in a
-      -- terminal, so this uses the Claude subscription, not API billing
-      {
-        "<leader>ac",
-        function()
-          require("sidekick.cli").toggle({ name = "claude", focus = true })
-        end,
-        desc = "Sidekick Toggle Claude",
-      },
-    },
-  },
+  { import = "plugins.claude" },
   {
     "folke/snacks.nvim",
     opts = {
@@ -48,5 +27,13 @@ return {
       { "<leader>fe", false },
       { "<leader>fE", false },
     },
+  },
+  -- lang.rust only installs codelldb; add rust-analyzer so rustaceanvim works without a rustup install
+  {
+    "mason-org/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      table.insert(opts.ensure_installed, "rust-analyzer")
+    end,
   },
 }
