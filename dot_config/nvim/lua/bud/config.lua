@@ -14,6 +14,7 @@ M.defaults = {
     write = "haiku",
     spawn = "sonnet",
     name = "haiku",
+    fix = "sonnet", -- the background fixer behind bug and feature reports
   },
 
   keys = {
@@ -24,6 +25,7 @@ M.defaults = {
     write = "<leader>ak",
     spawn = "<leader>as",
     log = "<leader>al",
+    report = "<leader>ar",
   },
 
   chat = {
@@ -57,6 +59,14 @@ M.defaults = {
     headroom = { enabled = false },
   },
 
+  -- bug reports and feature requests: Bud files the issue and bud-fix
+  -- (tools/cmd/bud-fix) works on a pull request in the background
+  report = {
+    enabled = true,
+    cmd = "bud-fix",
+    requests = 5, -- recent requests attached to a report
+  },
+
   sync = {
     enabled = true,
     cmd = "dotsync",
@@ -87,6 +97,8 @@ M.defaults = {
     ok = "✓",
     warn = "",
     sync = "󰓦",
+    bug = "󰃤 ",
+    feature = "󰌵 ",
   },
 }
 

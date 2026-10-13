@@ -76,7 +76,10 @@ return {
       T.eq(vim.fn.maparg("<leader>aa", "n", false, true).desc, "Chat (toggle)")
       T.eq(vim.fn.maparg("<leader>aj", "x", false, true).desc, "Quick ask")
       T.eq(vim.fn.maparg("<leader>ak", "x", false, true).desc, "Write here")
-      for _, c in ipairs({ "BudChat", "BudNew", "BudHistory", "BudSpawn", "BudLog", "BudInstructions", "BudSync" }) do
+      T.eq(vim.fn.maparg("<leader>ar", "n", false, true).desc, "Report a bug or feature")
+      local cmds = { "BudChat", "BudNew", "BudHistory", "BudSpawn", "BudLog", "BudInstructions", "BudSync" }
+      vim.list_extend(cmds, { "BudReport", "BudFix", "BudFixes" })
+      for _, c in ipairs(cmds) do
         T.eq(vim.fn.exists(":" .. c), 2, c)
       end
     end,

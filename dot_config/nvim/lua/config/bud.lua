@@ -10,4 +10,5 @@ return {
   --   context7 = { enabled = true },
   -- },
   -- warm = false, -- don't keep a Haiku process waiting
+  -- report = { enabled = false }, -- no <leader>ar bug and feature reports
 }

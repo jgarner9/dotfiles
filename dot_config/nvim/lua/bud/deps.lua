@@ -10,6 +10,10 @@ local function sync_on()
   return config.sync.enabled
 end
 
+local function report_on()
+  return config.report.enabled
+end
+
 --- { name, bin?, plugin?, needed_by, required?, when? }
 M.list = {
   {
@@ -32,6 +36,15 @@ M.list = {
   },
   { name = "go", bin = "go", needed_by = "Go tools and Go scripts from the spawner" },
   { name = "shellcheck", bin = "shellcheck", needed_by = "spawner checks on Bash scripts (bash -n still runs)" },
+  { name = "gh", bin = "gh", needed_by = "bug and feature reports (issues and pull requests)", when = report_on },
+  {
+    name = "bud-fix",
+    bin = function()
+      return config.report.cmd
+    end,
+    needed_by = "bug and feature reports (chezmoi builds it from tools/ when Go is installed)",
+    when = report_on,
+  },
   { name = "snacks.nvim", plugin = "snacks", needed_by = "pickers, inputs and notifications", required = true },
   { name = "render-markdown.nvim", plugin = "render-markdown", needed_by = "chat rendering" },
   { name = "lualine.nvim", plugin = "lualine", needed_by = "the statusline segment" },

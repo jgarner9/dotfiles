@@ -38,13 +38,14 @@ function M.files(root, opts)
   return out
 end
 
---- The joined text for a kind of process. "chat" also gets the tool docs;
---- "spawn" gets its mode section; "shared" (the warm Haiku process used by
---- quick ask, write here and name suggestions) gets neither, because those
---- modes send their instructions with each message instead.
+--- The joined text for a kind of process. "chat" and "fix" also get the
+--- tool docs; "spawn" and "fix" get their mode sections; "shared" (the warm
+--- Haiku process used by quick ask, write here and name suggestions) gets
+--- neither, because those modes send their instructions with each message
+--- instead.
 function M.text(mode, root)
   local parts = {}
-  for _, f in ipairs(M.files(root, { with_tools = mode == "chat" })) do
+  for _, f in ipairs(M.files(root, { with_tools = mode == "chat" or mode == "fix" })) do
     local body = util.read(f.path)
     if body and body:match("%S") then
       table.insert(parts, ("<!-- %s -->\n%s"):format(f.label, vim.trim(body)))

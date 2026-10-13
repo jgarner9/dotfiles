@@ -28,9 +28,19 @@ function M.relpath(path, root)
   return vim.fn.fnamemodify(path, ":~:.")
 end
 
+-- Bud's recent warnings and errors, newest last, for bug reports
+M.recent = {}
+
 function M.notify(msg, level, opts)
+  level = level or vim.log.levels.INFO
   opts = vim.tbl_extend("force", { title = "Bud" }, opts or {})
-  vim.notify(msg, level or vim.log.levels.INFO, opts)
+  if level >= vim.log.levels.WARN then
+    table.insert(M.recent, { time = os.time(), msg = msg, level = level })
+    if #M.recent > 20 then
+      table.remove(M.recent, 1)
+    end
+  end
+  vim.notify(msg, level, opts)
 end
 
 function M.dir(kind)
