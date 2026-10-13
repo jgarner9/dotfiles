@@ -1,0 +1,41 @@
+{
+  "files": [
+    {
+      "path": "server.go",
+      "score": 8,
+      "symbols": [
+        {
+          "name": "Cache",
+          "kind": "type",
+          "line": 7,
+          "refs": 3
+        },
+        {
+          "name": "NewCache",
+          "kind": "fn",
+          "line": 9,
+          "refs": 2
+        }
+      ]
+    },
+    {
+      "path": "web/app.ts",
+      "score": 4,
+      "symbols": [
+        {
+          "name": "User",
+          "kind": "iface",
+          "line": 1,
+          "refs": 2
+        },
+        {
+          "name": "loadUser",
+          "kind": "fn",
+          "line": 3,
+          "refs": 1
+        }
+      ]
+    }
+  ],
+  "total_files": 7
+}

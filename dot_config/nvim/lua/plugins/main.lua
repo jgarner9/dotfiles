@@ -12,28 +12,6 @@ return {
     },
   },
   {
-    "folke/sidekick.nvim",
-    -- run CLI sessions inside zellij so they survive nvim restarts
-    opts = {
-      cli = {
-        mux = {
-          enabled = true,
-        },
-      },
-    },
-    keys = {
-      -- open Claude Code directly; sidekick runs the `claude` CLI in a
-      -- terminal, so this uses the Claude subscription, not API billing
-      {
-        "<leader>ac",
-        function()
-          require("sidekick.cli").toggle({ name = "claude", focus = true })
-        end,
-        desc = "Sidekick Toggle Claude",
-      },
-    },
-  },
-  {
     "folke/snacks.nvim",
     opts = {
       explorer = {

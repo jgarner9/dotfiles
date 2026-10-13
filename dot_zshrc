@@ -48,6 +48,10 @@ PROMPT+='%(?.%F{green}.%F{red})❯%f '
 bindkey '^[[A' history-beginning-search-backward
 bindkey '^[[B' history-beginning-search-forward
 
+# personal tools (dotfiles dot_local/bin and Go tools built from tools/)
+# land here; set before zellij starts so every pane inherits it
+export PATH="$HOME/.local/bin:$PATH"
+
 if [[ -f $HOME/.local/bin/env ]]; then
 	. "$HOME/.local/bin/env"
 fi
@@ -88,5 +92,3 @@ fi
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-# Added by cua-driver-rs installer — see https://github.com/trycua/cua
-export PATH="/Users/jgarner/.local/bin:$PATH"
