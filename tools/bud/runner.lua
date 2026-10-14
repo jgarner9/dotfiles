@@ -114,8 +114,21 @@ function T.keys(keys)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, false, true), "x", false)
 end
 
+-- The real prompts read stdin, and at EOF that ends Neovim with status 0,
+-- skipping every test after it. A test mocks what it means to answer; any
+-- other prompt is a failure.
+local function unanswered(kind)
+  return function(_, opts)
+    error(("unanswered %s: %s"):format(kind, type(opts) == "table" and opts.prompt or "?"), 2)
+  end
+end
+
 --- Closes every window but one and wipes buffers, between tests.
 function T.reset()
+  vim.ui.input = function(opts)
+    unanswered("vim.ui.input")(nil, opts)
+  end
+  vim.ui.select = unanswered("vim.ui.select")
   pcall(vim.cmd, "stopinsert")
   for _, w in ipairs(vim.api.nvim_list_wins()) do
     if vim.api.nvim_win_get_config(w).relative ~= "" then

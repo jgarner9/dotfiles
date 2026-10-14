@@ -124,7 +124,10 @@ function M.prompt(desc, t, prev)
     desc,
     "",
   }
-  if t.bin then
+  if t.test then
+    -- the test spawner (testgen.lua) builds the whole request itself
+    lines = { desc, "", ("It will be saved as %s."):format(vim.fn.fnamemodify(t.path, ":~")) }
+  elseif t.bin then
     table.insert(lines, ("It will be installed on the user's PATH and run as `%s`."):format(t.name))
   else
     table.insert(lines, ("It will be saved as %s and run directly."):format(vim.fn.fnamemodify(t.path, ":~")))
@@ -155,6 +158,11 @@ function M.checks(t)
     table.insert(list, { name = "bash -n", cmd = { "bash", "-n", t.path } })
     if util.executable("shellcheck") then
       table.insert(list, { name = "shellcheck", cmd = { "shellcheck", "-x", "-f", "gcc", t.path } })
+    end
+  elseif t.test then
+    if util.executable("go") then
+      table.insert(list, { name = "go vet", cmd = { "go", "vet", "." }, cwd = t.cwd })
+      table.insert(list, { name = "go test", cmd = { "go", "test", "-count=1", "." }, cwd = t.cwd })
     end
   elseif util.executable("go") then
     local null = vim.fn.has("win32") == 1 and "NUL" or "/dev/null"
@@ -296,11 +304,11 @@ function M.generate(desc, t, cb)
       true
     )
     provider.request({
-      mode = "spawn",
+      mode = t.test and "test" or "spawn",
       model = config.models.spawn,
       root = t.root or util.root(),
       prompt = M.prompt(desc, t, prev),
-      request = desc,
+      request = t.request or desc,
       on_done = function(text)
         local code = util.strip_fences(text)
         if vim.trim(code) == "" then

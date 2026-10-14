@@ -13,7 +13,11 @@
 --     requests ran (mode, model, time), never their prompts or answers
 --   the fixer only (local): those requests' prompts and answers, so Claude
 --     can see what went wrong
+--   this machine: the request log gets a "report" entry when one is sent and
+--     a "fix" entry when its run ends; :BudHistory gets the report as a chat,
+--     with the outcome added when the run ends
 local config = require("bud.config")
+local history = require("bud.history")
 local log = require("bud.log")
 local util = require("bud.util")
 
@@ -153,14 +157,19 @@ function M.errors()
   return out
 end
 
+-- the reporter's own log entries, which aren't requests to Claude from here
+local own_modes = { report = true, fix = true }
+
 --- The newest log entries.
 function M.requests(n)
   local out = {}
-  for i, e in ipairs(log.entries()) do
-    if i > n then
+  for _, e in ipairs(log.entries()) do
+    if #out >= n then
       break
     end
-    table.insert(out, e)
+    if not own_modes[e.mode] then
+      table.insert(out, e)
+    end
   end
   return out
 end
@@ -399,7 +408,10 @@ function M.submit(r)
   if not ok then
     return nil, spawn_err
   end
-  say(("Filing “%s”. Bud will work on it in the background."):format(M.title(desc)))
+  local title = M.title(desc)
+  local filing = ("Filing “%s”. Bud will work on it in the background."):format(title)
+  M.remember(r.kind, title, desc, M.body(desc, atts), filing, src, stamp)
+  say(filing)
   return true
 end
 
@@ -508,6 +520,90 @@ function M.outcome(run)
     vim.log.levels.ERROR
 end
 
+-- History
+
+local function links_dir()
+  return M.reports_dir() .. "/chats"
+end
+
+--- Puts a sent report in the request log and, as a chat, in this project's
+--- :BudHistory. The chat is linked by title so the outcome lands in it later.
+function M.remember(kind, title, desc, body, filing, src, stamp)
+  log.add({
+    mode = "report",
+    model = config.models.fix,
+    root = src,
+    request = desc,
+    prompt = body,
+    response = filing,
+  })
+  local root = util.root()
+  local id = "report-" .. stamp
+  local lines = { "## " .. config.icons.you .. "You · " .. (kind == "bug" and "bug report" or "feature request"), "" }
+  vim.list_extend(lines, util.split_lines(desc))
+  vim.list_extend(lines, { "", "## " .. config.icons.bud .. "Bud", "", filing, "" })
+  history.save({
+    id = id,
+    root = root,
+    title = (kind == "bug" and config.icons.bug or config.icons.feature) .. title,
+    model = config.models.fix,
+    lines = lines,
+  })
+  util.write(("%s/%s.json"):format(links_dir(), stamp), vim.json.encode({ id = id, root = root, title = title }))
+end
+
+--- The chat a run's report was saved as, unlinked once found.
+local function linked_chat(run)
+  for _, path in ipairs(vim.fn.glob(links_dir() .. "/*.json", false, true)) do
+    local ok, link = pcall(vim.json.decode, util.read(path) or "")
+    if ok and type(link) == "table" and link.title == run.title then
+      os.remove(path)
+      return history.get(link.root, link.id)
+    end
+  end
+end
+
+--- A finished run in the request log, and its outcome in the report's chat.
+--- Once per run.
+function M.record(run)
+  if not mark_seen("log:" .. run.id) then
+    return
+  end
+  local msg = M.outcome(run)
+  local notes = run.summary and vim.trim(run.summary) or ""
+  local facts = {}
+  for _, kv in ipairs({
+    { "Run", run.id },
+    { "Issue", run.issue_url },
+    { "Branch", run.branch },
+    { "Pull request", run.pr_url and (run.pr_url .. (run.draft and " (draft)" or "")) },
+    { "Tests", run.tests },
+  }) do
+    if kv[2] and kv[2] ~= "" then
+      table.insert(facts, ("%s: %s"):format(kv[1], kv[2]))
+    end
+  end
+  log.add({
+    mode = "fix",
+    model = config.models.fix,
+    root = require("bud.spawn").chezmoi_source(),
+    request = run.title,
+    prompt = table.concat(facts, "\n"),
+    response = run.phase ~= "failed" and (msg .. (notes ~= "" and ("\n\n" .. notes) or "")) or nil,
+    error = run.phase == "failed" and msg or nil,
+  })
+  local chat = linked_chat(run)
+  if chat then
+    vim.list_extend(chat.lines, util.split_lines(msg))
+    if notes ~= "" then
+      vim.list_extend(chat.lines, { "", "### Claude's notes", "" })
+      vim.list_extend(chat.lines, util.split_lines(notes))
+    end
+    table.insert(chat.lines, "")
+    history.save(chat)
+  end
+end
+
 M.known = {}
 -- runs with an id from here on started while this Neovim was open
 M.since = os.date("%Y%m%d-%H%M%S")
@@ -525,9 +621,12 @@ function M.poll()
       if run.issue and not (prev and prev.issue) and (prev or recent) then
         say(("Filed %s. Bud is working on it in the background."):format(M.label(run)))
       end
-    elseif (prev and not terminal[prev.phase] or not prev and recent) and mark_seen(run.id) then
-      local msg, level = M.outcome(run)
-      say(msg, level, run.id)
+    elseif prev and not terminal[prev.phase] or not prev and recent then
+      if mark_seen(run.id) then
+        local msg, level = M.outcome(run)
+        say(msg, level, run.id)
+      end
+      M.record(run)
     end
     M.known[run.id] = { id = run.id, phase = run.phase, issue = run.issue }
   end
@@ -570,6 +669,9 @@ function M.startup()
         told = told + 1
         local msg, level = M.outcome(run)
         say(msg, level, run.id)
+      end
+      if run.id >= week then
+        M.record(run)
       end
     else
       any_active = true

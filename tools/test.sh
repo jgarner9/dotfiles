@@ -46,8 +46,14 @@ else
 	skip "shellcheck" "shellcheck not installed"
 fi
 
-if command -v "${NVIM:-nvim}" >/dev/null 2>&1; then
-	run "bud" bash "$here/bud/run.sh"
+# Inside Neovim (and anything it starts, like bud-fix) $NVIM is the server
+# socket, not a binary: only an executable file counts.
+nvim=nvim
+if [[ -n ${NVIM:-} && -f $NVIM && -x $NVIM ]]; then
+	nvim=$NVIM
+fi
+if command -v "$nvim" >/dev/null 2>&1; then
+	run "bud" env NVIM="$nvim" bash "$here/bud/run.sh"
 else
 	skip "bud" "nvim not installed"
 fi

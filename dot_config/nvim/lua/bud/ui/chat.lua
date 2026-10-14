@@ -482,7 +482,9 @@ function M.new()
   end
 end
 
---- Loads a saved chat; the next message resumes its Claude session.
+--- Loads a saved chat; the next message resumes its Claude session. One
+--- with no session (a test spawn or a report, saved by those tools) sends
+--- its transcript along with the next message instead.
 function M.load(chat)
   if S.proc then
     S.proc:close()
@@ -496,6 +498,9 @@ function M.load(chat)
   S.root = chat.root
   S.mapped = true
   S.extra = {}
+  if not chat.session_id and chat.lines and #chat.lines > 0 then
+    table.insert(S.extra, "<earlier-transcript>\n" .. table.concat(chat.lines, "\n") .. "\n</earlier-transcript>")
+  end
   S.status = nil
   S.busy = false
   ensure_buffers()

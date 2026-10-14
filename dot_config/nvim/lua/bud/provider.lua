@@ -281,7 +281,8 @@ local function take(spec)
 end
 
 --- One request on a fresh process. opts:
----   mode      "quick" | "write" | "name" | "spawn" (prompts.lua)
+---   mode      "quick" | "write" | "name" | "spawn" (prompts.lua), or "test",
+---             a spawn logged as the test spawner
 ---   model     defaults to config.models[mode]
 ---   root      project root (the process's cwd)
 ---   prompt    the full message
@@ -293,7 +294,7 @@ function M.request(opts)
   local model = opts.model or config.models[opts.mode] or config.models.quick
   local prompts = require("bud.prompts")
   local proc, message
-  if opts.mode == "spawn" then
+  if opts.mode == "spawn" or opts.mode == "test" then
     proc = Proc.spawn({
       model = model,
       root = root,
