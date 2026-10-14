@@ -304,11 +304,11 @@ function M.generate(desc, t, cb)
       true
     )
     provider.request({
-      mode = "spawn",
+      mode = t.test and "test" or "spawn",
       model = config.models.spawn,
       root = t.root or util.root(),
       prompt = M.prompt(desc, t, prev),
-      request = desc,
+      request = t.request or desc,
       on_done = function(text)
         local code = util.strip_fences(text)
         if vim.trim(code) == "" then

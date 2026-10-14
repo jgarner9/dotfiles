@@ -33,7 +33,8 @@ local function go_project(T, extra)
   for k, v in pairs(extra or {}) do
     files[k] = v
   end
-  return T.project(files)
+  -- a git repo, so open() finds the project root the way it would for real
+  return T.project(files, true)
 end
 
 local function wait_result(T)
@@ -158,6 +159,10 @@ return {
           cb("negative numbers")
         end)
       end
+      os.remove(require("bud.log").path())
+      for _, c in ipairs(require("bud.history").list(root)) do
+        require("bud.history").delete(c)
+      end
       testgen.open()
       T.wait(function()
         return vim.uv.fs_stat(root .. "/calc_test.go") ~= nil and #require("bud.log").entries() > 0
@@ -167,10 +172,18 @@ return {
       local e = require("bud.log").entries()[1]
       T.contains(e.prompt, "the function `Double` in calc.go")
       T.contains(e.prompt, "Cover in particular: negative numbers")
+      T.eq(e.mode, "test", "logged as the test spawner")
+      T.eq(e.request, "Tests for `Double` in calc.go: negative numbers")
       T.wait(function()
         return vim.api.nvim_buf_get_name(0):match("calc_test%.go$")
       end, 30000, "result float")
       T.keys("q")
+      local chats = require("bud.history").list(root)
+      T.eq(#chats, 1, "saved to the chat history")
+      T.eq(chats[1].title, "Tests for `Double` in calc.go: negative numbers")
+      local transcript = table.concat(chats[1].lines, "\n")
+      T.contains(transcript, "calc_test.go` · ✓ go vet · ✓ go test")
+      T.contains(transcript, "func TestAdd")
     end,
   },
   {
@@ -193,12 +206,14 @@ return {
           cb("")
         end)
       end
+      local before = #require("bud.log").entries()
       testgen.open()
       T.wait(function()
-        return #require("bud.log").entries() > 0
+        return #require("bud.log").entries() > before
       end, 30000)
       vim.ui.select, vim.ui.input = orig_select, orig_input
       local e = require("bud.log").entries()[1]
+      T.eq(e.request, "Tests for the whole file in calc.go")
       T.contains(e.prompt, "already exists")
       T.contains(e.prompt, "func TestAdd")
       T.wait(function()

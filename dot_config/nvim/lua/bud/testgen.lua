@@ -3,6 +3,10 @@
 -- go vet and go test, retries once with the errors, and opens the result.
 -- An existing test file is extended, never replaced. Generation, checks and
 -- the result float are the script spawner's (spawn.lua); only Go for now.
+-- Each run is in the request log as a "test" request and in :BudHistory as a
+-- chat with the request and the test file.
+local config = require("bud.config")
+local history = require("bud.history")
 local spawn = require("bud.spawn")
 local util = require("bud.util")
 
@@ -67,6 +71,47 @@ local function say(msg, level)
   util.notify(msg, level, { id = "bud_spawn", title = "Bud spawner" })
 end
 
+--- The user's own words for the log and the chat history.
+function M.request(src, focus, notes)
+  local text = ("Tests for %s in %s"):format(focus and ("`" .. focus .. "`") or "the whole file", src)
+  if notes and notes ~= "" then
+    text = text .. ": " .. notes
+  end
+  return text
+end
+
+--- A run as a chat in :BudHistory: what was asked, what was written.
+function M.save_history(t, request, ok, results)
+  local code = util.read(t.path)
+  if not code then
+    return
+  end
+  local summary = vim.tbl_map(function(r)
+    return (r.ok and config.icons.ok or "✗") .. " " .. r.name
+  end, results or {})
+  local lines = { "## " .. config.icons.you .. "You", "" }
+  vim.list_extend(lines, util.split_lines(request))
+  vim.list_extend(lines, { "", "## " .. config.icons.bud .. "Bud", "" })
+  table.insert(
+    lines,
+    ("%s `%s`%s"):format(
+      ok and config.icons.ok or config.icons.warn,
+      util.relpath(t.path, t.root),
+      #summary > 0 and (" · " .. table.concat(summary, " · ")) or ""
+    )
+  )
+  vim.list_extend(lines, { "", "```go" })
+  vim.list_extend(lines, util.split_lines(vim.trim(code)))
+  vim.list_extend(lines, { "```", "" })
+  history.save({
+    id = util.uuid(),
+    root = t.root,
+    title = request,
+    model = config.models.spawn,
+    lines = lines,
+  })
+end
+
 --- Function picker, prompts, then generation.
 function M.open()
   local buf = vim.api.nvim_get_current_buf()
@@ -78,7 +123,7 @@ function M.open()
   local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
   local funcs = M.funcs(lines)
   local cursor = vim.api.nvim_win_get_cursor(0)[1]
-  local choices = { { label = "Whole file" } }
+  local choices = {}
   local near
   for _, f in ipairs(funcs) do
     if f.line <= cursor then
@@ -93,6 +138,7 @@ function M.open()
       table.insert(choices, f)
     end
   end
+  table.insert(choices, { label = "Whole file" })
   vim.ui.select(choices, {
     prompt = "Write tests for",
     format_item = function(c)
@@ -106,10 +152,15 @@ function M.open()
       if notes == nil then
         return
       end
+      notes = vim.trim(notes)
+      local src = util.relpath(path, root)
       local t = M.target(path, root)
+      t.request = M.request(src, choice.name, notes)
       local existing = util.read(t.path)
-      local desc = M.describe(util.relpath(path, root), table.concat(lines, "\n"), choice.name, vim.trim(notes), existing)
-      spawn.generate(desc, t)
+      local desc = M.describe(src, table.concat(lines, "\n"), choice.name, notes, existing)
+      spawn.generate(desc, t, function(ok, results)
+        M.save_history(t, t.request, ok, results)
+      end)
     end)
   end)
 end

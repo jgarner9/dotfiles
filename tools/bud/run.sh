@@ -6,7 +6,10 @@ set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
 repo=$(cd "$here/../.." && pwd)
-NVIM=${NVIM:-nvim}
+# Inside Neovim $NVIM is the server socket; only an executable file counts.
+if [[ -z ${NVIM:-} || ! -f $NVIM || ! -x $NVIM ]]; then
+	NVIM=nvim
+fi
 BUD_TEST_NVIM=$(command -v "$NVIM" || true)
 export BUD_TEST_NVIM
 

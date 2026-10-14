@@ -98,7 +98,9 @@ check "pending changes are not drift" "$(run)" '.status == "synced"'
 setup
 mkdir -p "$work/state/dotsync/lock"
 check "locked" "$(run --force)" '.status == "skipped_locked"'
-touch -d '20 minutes ago' "$work/state/dotsync/lock"
+# -t works with both GNU and BSD touch; -d's formats don't
+stale=$(date -d '20 minutes ago' +%Y%m%d%H%M 2>/dev/null || date -v-20M +%Y%m%d%H%M)
+touch -t "$stale" "$work/state/dotsync/lock"
 check "stale lock cleared" "$(run --force)" '.status == "up_to_date"'
 check "lock released" "$(test -d "$work/state/dotsync/lock" && echo '{"held":true}' || echo '{"held":false}')" '.held == false'
 

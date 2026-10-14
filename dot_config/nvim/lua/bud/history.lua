@@ -33,6 +33,16 @@ function M.list(root)
   return out
 end
 
+--- One saved chat, or nil.
+function M.get(root, id)
+  local ok, chat = pcall(
+    vim.json.decode,
+    util.read(dir(root) .. "/" .. id .. ".json") or "",
+    { luanil = { object = true, array = true } }
+  )
+  return ok and type(chat) == "table" and chat or nil
+end
+
 function M.delete(chat)
   os.remove(dir(chat.root) .. "/" .. chat.id .. ".json")
 end

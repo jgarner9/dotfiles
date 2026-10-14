@@ -51,6 +51,7 @@ local function setup(T)
     os.remove(f)
   end
   os.remove(util.dir("state") .. "/fixes-seen.json")
+  vim.fn.delete(report.reports_dir() .. "/chats", "rf")
 end
 
 local execute = vim.fn.execute
@@ -305,5 +306,62 @@ return {
     report.known = {}
     report.startup()
     T.eq(#notes, count, "said once")
+  end),
+
+  case("a report and its outcome land in the request log and the chat history", function(T)
+    local history = require("bud.history")
+    local root = util.root()
+    for _, c in ipairs(history.list(root)) do
+      history.delete(c)
+    end
+    T.keys("<F6>")
+    T.keys("<Tab>")
+    T.keys("iA test spawner for Go<CR><CR>Pick a function first.")
+    T.keys("<CR>")
+    wait_args(T)
+    local e = log.entries()[1]
+    T.eq(e.mode, "report")
+    T.eq(e.request, "A test spawner for Go\n\nPick a function first.")
+    T.contains(e.prompt, "### Environment")
+    T.contains(e.response, "Filing “A test spawner for Go”")
+    T.eq(#report.requests(10), 2, "the reporter's own entries aren't sent as requests")
+
+    local chats = history.list(root)
+    T.eq(#chats, 1)
+    T.eq(chats[1].title, config.icons.feature .. "A test spawner for Go")
+    T.contains(table.concat(chats[1].lines, "\n"), "feature request\n\nA test spawner for Go")
+
+    local id = os.date("%Y%m%d-%H%M%S") .. "-eeee"
+    local run = { id = id, pid = vim.fn.getpid(), kind = "feature", title = "A test spawner for Go", phase = "fixing" }
+    write_run(run)
+    report.poll()
+    run.phase, run.issue, run.issue_url = "done", 14, "https://github.com/o/r/issues/14"
+    run.pr, run.pr_url, run.summary = 15, "https://github.com/o/r/pull/15", "Added testgen.lua."
+    write_run(run)
+    report.poll()
+    report.poll()
+    local fixes = vim.tbl_filter(function(x)
+      return x.mode == "fix"
+    end, log.entries())
+    T.eq(#fixes, 1, "logged once")
+    T.eq(fixes[1].request, "A test spawner for Go")
+    T.contains(fixes[1].prompt, "Pull request: https://github.com/o/r/pull/15")
+    T.contains(fixes[1].response, "PR #15 for #14 is ready for review.")
+    T.contains(fixes[1].response, "Added testgen.lua.")
+
+    local chat = history.list(root)[1]
+    local transcript = table.concat(chat.lines, "\n")
+    T.contains(transcript, "PR #15 for #14 is ready for review.\nhttps://github.com/o/r/pull/15")
+    T.contains(transcript, "### Claude's notes\n\nAdded testgen.lua.")
+    history.delete(chat)
+  end),
+
+  case("a failed run is logged as an error", function(T)
+    local id = os.date("%Y%m%d-%H%M%S") .. "-ffff"
+    write_run({ id = id, pid = 999999999, phase = "fixing", issue = 4, title = "u" })
+    report.poll()
+    local e = log.entries()[1]
+    T.eq(e.mode, "fix")
+    T.contains(e.error, "The fix for #4 failed: stopped before it finished")
   end),
 }
