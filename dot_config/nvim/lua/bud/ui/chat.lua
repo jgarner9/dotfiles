@@ -46,6 +46,28 @@ local function transcript_lines()
   return {}
 end
 
+-- Writes land while the input has focus, and Neovim only fires TextChanged
+-- for the current buffer, so a markdown renderer (render-markdown) never
+-- sees them. Fire it for the transcript ourselves: once per batch of writes,
+-- and again when the stream goes quiet, since render-markdown's debounce
+-- drops changes that land right after one it rendered.
+local changed_queued = false
+local changed_timer
+local function fire_changed()
+  changed_queued = false
+  if S.buf and vim.api.nvim_buf_is_valid(S.buf) and S.buf ~= vim.api.nvim_get_current_buf() then
+    vim.api.nvim_exec_autocmds("TextChanged", { buffer = S.buf, modeline = false })
+  end
+end
+local function changed()
+  if not changed_queued then
+    changed_queued = true
+    vim.schedule(fire_changed)
+  end
+  changed_timer = changed_timer or vim.uv.new_timer()
+  changed_timer:start(150, 0, vim.schedule_wrap(fire_changed))
+end
+
 local function set_lines(lines)
   vim.bo[S.buf].modifiable = true
   vim.api.nvim_buf_set_lines(S.buf, 0, -1, false, lines)
@@ -58,6 +80,7 @@ local function set_lines(lines)
     trail = trail + 1
   end
   S.trail = trail
+  changed()
 end
 
 local function follow()
@@ -87,6 +110,7 @@ local function append(text)
   vim.bo[S.buf].modifiable = true
   vim.api.nvim_buf_set_text(S.buf, last, #line, last, #line, util.split_lines(text))
   vim.bo[S.buf].modifiable = false
+  changed()
   local tail = #(text:match("\n*$"))
   if tail == #text then
     S.trail = S.trail + tail
