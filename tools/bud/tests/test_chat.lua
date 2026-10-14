@@ -87,6 +87,25 @@ return {
     end,
   },
   {
+    "streamed text fires TextChanged on the transcript so markdown renders",
+    function(T)
+      setup(T)
+      chat.new()
+      local fired = 0
+      vim.api.nvim_create_autocmd("TextChanged", {
+        buffer = chat.state.buf,
+        callback = function()
+          fired = fired + 1
+        end,
+      })
+      send(T, "render me")
+      T.wait(function()
+        return fired > 0
+      end, 1000, "TextChanged on the transcript")
+      chat.hide()
+    end,
+  },
+  {
     "tool calls show up in the transcript",
     function(T)
       setup(T)
