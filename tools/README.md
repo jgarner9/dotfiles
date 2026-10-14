@@ -12,6 +12,7 @@ fails.
 | Tool | What it does |
 | --- | --- |
 | `repomap` | Ranked map of a repo's files and top-level symbols, for feeding an LLM |
+| `bud-fix` | Turns a Bud bug report or feature request into a pull request (behind `<leader>ar`) |
 
 Also here, because chezmoi ignores this folder:
 

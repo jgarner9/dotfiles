@@ -1,5 +1,6 @@
 -- The statusline segment: a spinner while Claude works, the last request's
--- token counts after, and a sync icon when dotsync needs your attention.
+-- token counts after, a fix in progress, and a sync icon when dotsync needs
+-- your attention.
 local config = require("bud.config")
 
 local M = {}
@@ -37,6 +38,10 @@ function M.text()
     local u = provider.last.usage
     local input = (u.input_tokens or 0) + (u.cache_read_input_tokens or 0) + (u.cache_creation_input_tokens or 0)
     table.insert(parts, ("%s%s↑ %s↓"):format(config.icons.bud, short(input), short(u.output_tokens)))
+  end
+  local fix = package.loaded["bud.report"] and require("bud.report").status()
+  if fix then
+    table.insert(parts, fix)
   end
   local s = sync_part()
   if s then

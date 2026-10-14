@@ -7,6 +7,7 @@
 --   <leader>ak  write here (visual: replace the selection), as a preview
 --   <leader>as  spawn a script
 --   <leader>al  the request log
+--   <leader>ar  report a bug or ask for a feature; Bud opens a PR for it
 --
 -- Settings live in lua/config/bud.lua; defaults in lua/bud/config.lua.
 local M = {}
@@ -25,6 +26,7 @@ M.actions = {
   write = lazy("bud.ui.write", "open"),
   spawn = lazy("bud.spawn", "open"),
   log = lazy("bud.log", "open"),
+  report = lazy("bud.ui.report", "open"),
 }
 
 local keymaps = {
@@ -35,6 +37,7 @@ local keymaps = {
   { "write", { "n", "x" }, "Write here" },
   { "spawn", "n", "Spawn a script" },
   { "log", "n", "Request log" },
+  { "report", "n", "Report a bug or feature" },
 }
 
 function M.instructions()
@@ -54,6 +57,21 @@ local function commands()
   cmd("BudSync", function()
     require("bud.sync").run(true)
   end, { desc = "Bud: run dotsync now" })
+  cmd("BudReport", function(o)
+    require("bud.ui.report").open(o.args ~= "" and o.args or nil)
+  end, {
+    nargs = "?",
+    complete = function()
+      return { "bug", "feature" }
+    end,
+    desc = "Bud: report a bug or ask for a feature",
+  })
+  cmd("BudFix", function(o)
+    require("bud.report").fix(o.args)
+  end, { nargs = 1, desc = "Bud: work on an existing issue in the background" })
+  cmd("BudFixes", function()
+    require("bud.report").list()
+  end, { desc = "Bud: reports and their pull requests" })
 end
 
 local function autocmds()
@@ -130,9 +148,11 @@ function M.setup(opts)
   end)
   require("bud.log").trim()
 
-  -- after the first screen: dependency warning, dotfile sync, warm Haiku
+  -- after the first screen: dependency warning, dotfile sync, fixes that
+  -- finished while Neovim was closed, warm Haiku
   vim.defer_fn(function()
     require("bud.deps").startup()
+    require("bud.report").startup()
   end, 300)
   require("bud.sync").startup()
   vim.defer_fn(function()

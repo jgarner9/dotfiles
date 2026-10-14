@@ -46,11 +46,12 @@ function M.check()
     h.error(("`%s` not found in PATH"):format(config.claude))
   end
   h.info(
-    ("models: chat %s, quick %s, write %s, spawn %s"):format(
+    ("models: chat %s, quick %s, write %s, spawn %s, fix %s"):format(
       config.models.chat,
       config.models.quick,
       config.models.write,
-      config.models.spawn
+      config.models.spawn,
+      config.models.fix
     )
   )
 
@@ -81,6 +82,49 @@ function M.check()
   end
   if #instructions.files(root) == 0 then
     h.warn("No instruction files in " .. config.instructions_dir)
+  end
+
+  h.start("Bud: reports")
+  if not config.report.enabled then
+    h.info("Disabled")
+  else
+    if util.executable("gh") then
+      local gh = vim.system({ "gh", "auth", "status" }, { text = true }):wait(10000)
+      if gh.code == 0 then
+        h.ok("gh is signed in")
+      else
+        h.error("gh isn't signed in. Run `gh auth login`.")
+      end
+    else
+      h.error("gh is missing, so reports can't file issues or open pull requests")
+    end
+    if util.executable(config.report.cmd) then
+      h.ok(config.report.cmd .. " is installed")
+    else
+      h.error(
+        ("%s is missing. chezmoi builds it from tools/ when Go is installed: run `chezmoi apply`."):format(
+          config.report.cmd
+        )
+      )
+    end
+    local src = require("bud.spawn").chezmoi_source()
+    if src then
+      h.ok("Fixes branch from " .. vim.fn.fnamemodify(src, ":~"))
+    else
+      h.error("Can't find the dotfiles repo (`chezmoi source-path` failed)")
+    end
+    local report = require("bud.report")
+    for i, run in ipairs(report.runs()) do
+      if i > 3 then
+        break
+      end
+      local msg = ("%s %s: %s"):format(report.label(run), run.title or "", run.phase)
+      if run.phase == "failed" then
+        h.warn(msg .. " (" .. (run.error or "") .. ")")
+      else
+        h.info(msg)
+      end
+    end
   end
 
   h.start("Bud: dotfile sync")

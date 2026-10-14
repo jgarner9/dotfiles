@@ -43,6 +43,16 @@ return {
     end,
   },
   {
+    "the fixer gets the tool docs and its own mode, which lifts the read-only rule",
+    function(T)
+      T.bin("rg", "#!/bin/sh\n")
+      local text = instructions.text("fix", T.project({}))
+      T.contains(text, "tools/rg.md")
+      T.contains(text, "<!-- mode: fix -->")
+      T.contains(text, "you may edit\nthe files the task names")
+    end,
+  },
+  {
     "user files join in name order and path() caches with a hash",
     function(T)
       local dir = vim.fn.tempname()

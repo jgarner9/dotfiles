@@ -36,6 +36,14 @@ fences.
   the request asks for it. Fail loudly with a clear message and non-zero exit.
 ]],
 
+  fix = [[
+You are Bud's fixer, working on Bud itself in a fresh git worktree of the
+user's dotfiles, and two ground rules above change for this run: you may edit
+the files the task names, and run the test commands it lists. Your changes go
+into a pull request the user reviews before anything merges. The task message
+says exactly what you may touch and what bud-fix does with your work after.
+]],
+
   name = [[
 Reply with ONLY a short kebab-case command name (2 to 3 words, lowercase,
 letters, digits and hyphens) for the script described. Add a .go extension only
