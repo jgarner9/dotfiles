@@ -6,6 +6,7 @@
 --   <leader>aj  quick ask under the cursor (visual: about the selection)
 --   <leader>ak  write here (visual: replace the selection), as a preview
 --   <leader>as  spawn a script
+--   <leader>at  spawn Go tests for the current file
 --   <leader>al  the request log
 --   <leader>ar  report a bug or ask for a feature; Bud opens a PR for it
 --
@@ -25,6 +26,7 @@ M.actions = {
   quick = lazy("bud.ui.quick", "open"),
   write = lazy("bud.ui.write", "open"),
   spawn = lazy("bud.spawn", "open"),
+  test = lazy("bud.testgen", "open"),
   log = lazy("bud.log", "open"),
   report = lazy("bud.ui.report", "open"),
 }
@@ -36,6 +38,7 @@ local keymaps = {
   { "quick", { "n", "x" }, "Quick ask" },
   { "write", { "n", "x" }, "Write here" },
   { "spawn", "n", "Spawn a script" },
+  { "test", "n", "Spawn Go tests" },
   { "log", "n", "Request log" },
   { "report", "n", "Report a bug or feature" },
 }
@@ -52,6 +55,7 @@ local function commands()
   cmd("BudNew", M.actions.new_chat, { desc = "Bud: new chat" })
   cmd("BudHistory", M.actions.history, { desc = "Bud: earlier chats in this project" })
   cmd("BudSpawn", M.actions.spawn, { desc = "Bud: spawn a script" })
+  cmd("BudTest", M.actions.test, { desc = "Bud: spawn Go tests for the current file" })
   cmd("BudLog", M.actions.log, { desc = "Bud: browse the request log" })
   cmd("BudInstructions", M.instructions, { desc = "Bud: show the instructions Claude gets" })
   cmd("BudSync", function()

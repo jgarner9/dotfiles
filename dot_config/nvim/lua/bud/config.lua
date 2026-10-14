@@ -24,6 +24,7 @@ M.defaults = {
     quick = "<leader>aj",
     write = "<leader>ak",
     spawn = "<leader>as",
+    test = "<leader>at",
     log = "<leader>al",
     report = "<leader>ar",
   },

@@ -32,6 +32,9 @@ fences.
   variables, print a usage line for -h/--help, and keep it shellcheck-clean.
 - Go: a single `package main` file using only the standard library unless the
   request clearly needs more, with flag-based usage text.
+- Go tests: when asked for a test file, reply with the whole `_test.go` file in
+  the source file's package: table-driven, `t.Run` subtests, standard library
+  only, no network or sleeps, covering normal, edge and error cases.
 - Deterministic behavior: same input, same output. No network access unless
   the request asks for it. Fail loudly with a clear message and non-zero exit.
 ]],
