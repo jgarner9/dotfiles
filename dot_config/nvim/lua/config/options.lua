@@ -3,6 +3,10 @@
 -- Add any additional options here
 vim.g.lazyvim_check_order = false
 
+-- Copilot (the ai.copilot extra) as inline ghost text that Tab accepts,
+-- instead of as items in the completion menu
+vim.g.ai_cmp = false
+
 -- Disable remote-plugin providers. The stock python ftplugin calls
 -- has('python3'), which spawns python interpreters to probe for pynvim and
 -- adds ~130ms to opening the first .py file. No configured plugin uses a
