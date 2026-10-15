@@ -369,11 +369,10 @@ default_layout "compact"
 // copy_command "xclip -selection clipboard" // x11
 // copy_command "wl-copy"                    // wayland
 // copy_command "pbcopy"                     // osx
-{{ if eq .chezmoi.os "darwin" -}}
-copy_command "pbcopy"
-{{- else -}}
-copy_command "wl-copy"
-{{- end }}
+//
+// Left unset on purpose: OSC 52 hands copies to kitty, which puts them on the
+// local clipboard on macOS and Linux alike, and also works over SSH, where a
+// remote wl-copy or pbcopy would have nowhere to send them.
 
 // Choose the destination for copied text
 // Allows using the primary selection buffer (on x11/wayland) instead of the system clipboard.

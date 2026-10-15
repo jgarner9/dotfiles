@@ -62,7 +62,10 @@ if [[ -z $ZELLIJ ]] && command -v chezmoi >/dev/null; then
 	chezmoi update --force
 fi
 
-if command -v zellij >/dev/null; then
+# not over SSH: you're usually already inside a local zellij, and a nested
+# one loses its keybinds to the outer session (run `zellij attach -c` by
+# hand for a remote session that survives disconnects)
+if command -v zellij >/dev/null && [[ -z $SSH_CONNECTION ]]; then
 	# exit the shell when zellij exits, so closing zellij closes the window
 	# (pairs with on_force_close "quit" in the zellij config)
 	export ZELLIJ_AUTO_EXIT=true
