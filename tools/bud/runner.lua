@@ -146,6 +146,7 @@ require("bud").setup({
   claude = here .. "/fake-claude",
   instructions_dir = repo .. "/dot_config/nvim/bud/instructions",
   sync = { enabled = false },
+  chezmoi = { enabled = false }, -- tests enable it with a fake chezmoi
   warm = true,
 })
 T.startup_notes = notes

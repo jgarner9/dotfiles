@@ -74,6 +74,16 @@ M.defaults = {
     delay_ms = 1500, -- after startup, so it never competes with the first draw
   },
 
+  -- saving a dotfile copies it into the chezmoi source: managed files are
+  -- re-added, new files inside a folder chezmoi manages are added
+  chezmoi = {
+    enabled = true,
+    cmd = "chezmoi",
+    -- folders under $HOME too broad to count as managed, though managed
+    -- folders inside them still do (~/.config/nvim counts, ~/.config doesn't)
+    skip = { ".config", ".local", ".local/bin", ".ssh", "Documents" },
+  },
+
   deps = {
     -- names to never warn about on this machine, e.g. { "go" }
     ignore_missing = {},

@@ -6,6 +6,7 @@ setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 
 # MR JASON'S SUPER AWESOME ALIASES
 alias ls="ls --color -F"
+alias claude="headroom wrap claude"
 alias spm="sudo pacman"
 if command -v bat >/dev/null; then
 	alias cat="bat"
@@ -101,3 +102,9 @@ fi
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
+# >>> epai PATH >>>
+case ":$PATH:" in
+  *":$HOME/.local/bin":*) ;;
+  *) export PATH="$HOME/.local/bin:$PATH" ;;
+esac
+# <<< epai PATH <<<

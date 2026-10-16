@@ -66,6 +66,9 @@ function M.run(force)
         res = { status = "error", message = vim.trim(out.stderr or "") ~= "" and vim.trim(out.stderr) or "no output" }
       end
       M.last = res
+      if res.status == "synced" then
+        require("bud.chezmoi").invalidate()
+      end
       report(res, force)
       require("bud.ui.statusline").refresh()
     end)

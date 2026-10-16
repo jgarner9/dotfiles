@@ -11,4 +11,5 @@ return {
   -- },
   -- warm = false, -- don't keep a Haiku process waiting
   -- report = { enabled = false }, -- no <leader>ar bug and feature reports
+  -- chezmoi = { enabled = false }, -- don't copy saved dotfiles into chezmoi
 }

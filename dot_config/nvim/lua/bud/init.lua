@@ -10,6 +10,8 @@
 --   <leader>al  the request log
 --   <leader>ar  report a bug or ask for a feature; Bud opens a PR for it
 --
+-- Saving a dotfile copies it into the chezmoi source (lua/bud/chezmoi.lua).
+--
 -- Settings live in lua/config/bud.lua; defaults in lua/bud/config.lua.
 local M = {}
 
@@ -102,6 +104,14 @@ local function autocmds()
       provider.drop_spare()
       provider.prewarm()
       require("bud.util").notify("Instructions updated. Open chats keep the old version until a new chat.")
+    end,
+  })
+  vim.api.nvim_create_autocmd("BufWritePost", {
+    group = group,
+    callback = function(ev)
+      if vim.bo[ev.buf].buftype == "" then
+        require("bud.chezmoi").saved(ev.match)
+      end
     end,
   })
   vim.api.nvim_create_autocmd("DirChanged", {
