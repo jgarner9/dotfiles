@@ -15,7 +15,6 @@ alias dev="headroom wrap claude"
 alias epai-sync="export OLD_WD=$PWD; cd $HOME/work_dev/ai-tools; git stash; git pull origin main; git stash pop; bundle exec bin/epai --stdio=bigquery --claude; cd $OLD_WD; unset OLD_WD;"
 alias epai-claude="export OLD_WD=$PWD; cd $HOME/work_dev/ai-tools; bundle exec bin/epai --stdio=bigquery --claude; cd $OLD_WD; unset OLD_WD;"
 alias saksync="launchctl kickstart -k gui/$(id -u)/dev.jgarner.swiss"
-
 if command -v bat >/dev/null; then
 	alias cat="bat"
 fi
