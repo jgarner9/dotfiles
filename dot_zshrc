@@ -8,6 +8,12 @@ setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 alias ls="ls --color -F"
 alias claude="headroom wrap claude"
 alias spm="sudo pacman"
+alias home="ssh jgarner@archie.husky-cobia.ts.net"
+alias kb="cargo run --bin tantivy-kb -- --wiki-dir ./wiki"
+alias test-type="thokr"
+alias dev="headroom wrap claude"
+alias epai-sync="export OLD_WD=$PWD; cd $HOME/work_dev/ai-tools; git stash; git pull origin main; git stash pop; bundle exec bin/epai --stdio=bigquery --claude; cd $OLD_WD; unset OLD_WD;"
+alias epai-claude="export OLD_WD=$PWD; cd $HOME/work_dev/ai-tools; bundle exec bin/epai --stdio=bigquery --claude; cd $OLD_WD; unset OLD_WD;"
 if command -v bat >/dev/null; then
 	alias cat="bat"
 fi
