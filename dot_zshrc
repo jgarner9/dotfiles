@@ -53,14 +53,10 @@ bindkey '^[[B' history-beginning-search-forward
 # land here; set before zellij starts so every pane inherits it
 export PATH="$HOME/.local/bin:$PATH"
 
-if [[ -f $HOME/.local/bin/env ]]; then
-	. "$HOME/.local/bin/env"
-fi
-
 # pull and apply the latest dotfiles, overwriting any local edits without
 # prompting; skipped inside zellij so it runs once per window, not per pane
 if [[ -z $ZELLIJ ]] && command -v chezmoi >/dev/null; then
-	chezmoi update --force
+	chezmoi update --force &
 fi
 
 # not over SSH: you're usually already inside a local zellij, and a nested
@@ -98,13 +94,3 @@ fi
 if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
 	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
-
-# Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-
-# >>> epai PATH >>>
-case ":$PATH:" in
-  *":$HOME/.local/bin":*) ;;
-  *) export PATH="$HOME/.local/bin:$PATH" ;;
-esac
-# <<< epai PATH <<<
