@@ -93,7 +93,7 @@ if [[ -s "$NVM_DIR/nvm.sh" ]]; then
 fi
 
 # load .zprofile if not a login shell (zellij handling, non-login shells on launch)
-[[ -o login ]] || source "$HOME/.zprofile""
+[[ -o login ]] || source "$HOME/.zprofile"
 
 # source plugins (syntax-highlighting must stay last)
 if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
