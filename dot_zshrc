@@ -5,6 +5,7 @@ SAVEHIST=10000
 setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 
 # MR JASON'S SUPER AWESOME ALIASES
+alias ls="ls -G --color=auto"
 alias claude="headroom wrap claude"
 alias spm="sudo pacman"
 alias home="ssh jgarner@archie.husky-cobia.ts.net"
