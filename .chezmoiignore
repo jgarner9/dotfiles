@@ -1,16 +1,40 @@
-# Hyprland and waybar configs are only useful on Arch Linux (and derivatives)
+README.md
+
+{{- /*
+  OS split. Each machine only gets the files for its own OS:
+
+    Arch only:   Hyprland, waybar, wallpapers, ~/.config/zsh/arch.zsh
+    macOS only:  ~/.config/zsh/macos.zsh, kitty/macos.conf
+    Linux only:  kitty/linux.conf (kitty includes ${KITTY_OS}.conf)
+
+  Everything else is shared. To add an OS-specific file, put it under its
+  OS's block below.
+*/}}
+{{- $arch := false }}
+{{- if eq .chezmoi.os "linux" }}
+{{-   if or (eq .chezmoi.osRelease.id "arch") (contains "arch" (.chezmoi.osRelease.idLike | default "")) }}
+{{-     $arch = true }}
+{{-   end }}
+{{- end }}
+
+{{ if not $arch }}
+# Arch-only
+.config/hypr
+.config/hypr/**
+.config/waybar
+.config/waybar/**
+Documents/Backgrounds
+Documents/Backgrounds/**
+.config/zsh/arch.zsh
+{{ end }}
+
+{{ if ne .chezmoi.os "darwin" }}
+# macOS-only
+.config/zsh/macos.zsh
+.config/kitty/macos.conf
+{{ end }}
+
 {{ if ne .chezmoi.os "linux" }}
-.config/hypr
-.config/hypr/**
-.config/waybar
-.config/waybar/**
-.config/Documents
-.config/Documents/**
-{{ else if not (or (eq .chezmoi.osRelease.id "arch") (contains "arch" (.chezmoi.osRelease.idLike | default ""))) }}
-.config/hypr
-.config/hypr/**
-.config/waybar
-.config/waybar/**
-.config/Documents
-.config/Documents/**
+# Linux-only
+.config/kitty/linux.conf
 {{ end }}

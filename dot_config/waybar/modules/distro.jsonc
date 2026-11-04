@@ -10,7 +10,7 @@
   },
   "custom/code": {
     "format": "",
-    "on-click": "nvim",
+    "on-click": "kitty --class bud bud",
     "tooltip": false
   },
   "custom/files": {

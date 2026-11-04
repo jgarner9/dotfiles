@@ -5,12 +5,10 @@ SAVEHIST=10000
 setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 
 # MR JASON'S SUPER AWESOME ALIASES
-alias ls="ls -G --color=auto"
-alias spm="sudo pacman"
+# (OS-specific ones live in ~/.config/zsh/arch.zsh and macos.zsh)
 alias home="ssh jgarner@archie.husky-cobia.ts.net"
 alias kb="cargo run --bin tantivy-kb -- --wiki-dir ./wiki"
 alias test-type="thokr"
-alias saksync="launchctl kickstart -k gui/$(id -u)/dev.jgarner.swiss"
 if command -v bat >/dev/null; then
 	alias cat="bat"
 fi
@@ -56,11 +54,11 @@ bindkey '^[[B' history-beginning-search-forward
 # land here; set before zellij starts so every pane inherits it
 export PATH="$HOME/.local/bin:$PATH"
 
-# pull and apply the latest dotfiles, overwriting any local edits without
-# prompting; skipped inside zellij so it runs once per window, not per pane
-if [[ -z $ZELLIJ ]] && command -v chezmoi >/dev/null; then
-	chezmoi update --force > /dev/null 2>&1 &!
-fi
+# bud is the editor; kitty and zellij pick this up instead of naming one
+export EDITOR="bud"
+export VISUAL="bud"
+
+# dotfiles don't auto-sync; run `chezmoi update` by hand to pull and apply
 
 # not over SSH: you're usually already inside a local zellij, and a nested
 # one loses its keybinds to the outer session (run `zellij attach -c` by
@@ -93,10 +91,11 @@ fi
 # load .zprofile if not a login shell (zellij handling, non-login shells on launch)
 [[ -o login ]] || source "$HOME/.zprofile"
 
-# source plugins (syntax-highlighting must stay last)
-if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
+# OS-specific config last, so it can override anything above (and so the
+# Arch file's syntax-highlighting plugin loads after everything else)
+case $OSTYPE in
+	darwin*) _os_zshrc="$HOME/.config/zsh/macos.zsh" ;;
+	linux*) _os_zshrc="$HOME/.config/zsh/arch.zsh" ;;
+esac
+[[ -n ${_os_zshrc:-} && -f $_os_zshrc ]] && source "$_os_zshrc"
+unset _os_zshrc
