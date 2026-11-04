@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-# Stands in for the Claude Code CLI in Bud's tests. The logic lives in
-# fake_claude.lua so it can use Neovim's JSON support. ($NVIM can't name the
-# binary here: Neovim sets it to its own socket in child processes.)
-exec "${BUD_TEST_NVIM:-nvim}" -l "$(dirname "$0")/fake_claude.lua" "$@"

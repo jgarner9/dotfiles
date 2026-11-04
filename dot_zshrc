@@ -6,13 +6,10 @@ setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 
 # MR JASON'S SUPER AWESOME ALIASES
 alias ls="ls -G --color=auto"
-alias claude="headroom wrap claude"
 alias spm="sudo pacman"
 alias home="ssh jgarner@archie.husky-cobia.ts.net"
 alias kb="cargo run --bin tantivy-kb -- --wiki-dir ./wiki"
 alias test-type="thokr"
-alias epai-sync="export OLD_WD=$PWD; cd $HOME/work_dev/ai-tools; git stash; git pull origin main; git stash pop; bundle exec bin/epai --stdio=bigquery --claude; cd $OLD_WD; unset OLD_WD;"
-alias epai-claude="export OLD_WD=$PWD; cd $HOME/work_dev/ai-tools; bundle exec bin/epai --stdio=bigquery --claude; cd $OLD_WD; unset OLD_WD;"
 alias saksync="launchctl kickstart -k gui/$(id -u)/dev.jgarner.swiss"
 if command -v bat >/dev/null; then
 	alias cat="bat"
@@ -55,7 +52,7 @@ PROMPT+='%(?.%F{green}.%F{red})❯%f '
 bindkey '^[[A' history-beginning-search-backward
 bindkey '^[[B' history-beginning-search-forward
 
-# personal tools (dotfiles dot_local/bin and Go tools built from tools/)
+# personal tools (dotfiles dot_local/bin)
 # land here; set before zellij starts so every pane inherits it
 export PATH="$HOME/.local/bin:$PATH"
 
