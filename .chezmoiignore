@@ -1,10 +1,11 @@
 README.md
+Brewfile
 
 {{- /*
   OS split. Each machine only gets the files for its own OS:
 
     Arch only:   Hyprland, waybar, wallpapers, ~/.config/zsh/arch.zsh
-    macOS only:  ~/.config/zsh/macos.zsh, kitty/macos.conf
+    macOS only:  ~/.zprofile, ~/.config/zsh/macos.zsh, kitty/macos.conf, AeroSpace
     Linux only:  kitty/linux.conf (kitty includes ${KITTY_OS}.conf)
 
   Everything else is shared. To add an OS-specific file, put it under its
@@ -29,7 +30,10 @@ Documents/Backgrounds/**
 {{ end }}
 
 {{ if ne .chezmoi.os "darwin" }}
-# macOS-only
+# macOS-only (.zprofile loads Homebrew and the macOS keychain)
+.zprofile
+.config/aerospace
+.config/aerospace/**
 .config/zsh/macos.zsh
 .config/kitty/macos.conf
 {{ end }}

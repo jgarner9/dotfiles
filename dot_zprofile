@@ -1,0 +1,5 @@
+eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+alias python="python3"
+alias ssh-reload="sudo launchctl stop com.openssh.sshd && sudo launchctl start com.openssh.sshd"
+
+ssh-add --apple-load-keychain &>/dev/null &!

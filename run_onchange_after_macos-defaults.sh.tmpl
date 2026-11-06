@@ -1,0 +1,42 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# macOS system settings. chezmoi reruns this whenever this file changes.
+# Each setting is one line, so to drop one, delete its line. Some only take
+# effect after logging out.
+set -euo pipefail
+
+# keyboard: fast key repeat, and holding a key repeats it instead of
+# showing the accent picker (matters for hjkl)
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+# text: no autocorrect or smart punctuation, which mangle code and commands
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+
+# Finder: show extensions and the path bar, list view, folders first,
+# search the current folder, no .DS_Store on network shares
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder FXPreferredViewStyle -string Nlsv
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
+defaults write com.apple.finder FXDefaultSearchScope -string SCcf
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
+# Dock: hidden, no recent apps. For AeroSpace: don't reorder Spaces by
+# recent use, and group windows by app in Mission Control.
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.dock mru-spaces -bool false
+defaults write com.apple.dock expose-group-apps -bool true
+
+# screenshots go to their own folder instead of the Desktop
+mkdir -p "$HOME/Pictures/Screenshots"
+defaults write com.apple.screencapture location -string "$HOME/Pictures/Screenshots"
+
+killall Dock Finder SystemUIServer 2>/dev/null || true
+{{ end -}}

@@ -1,0 +1,17 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Installs what the dotfiles Brewfile lists. chezmoi reruns this only when
+# the Brewfile changes (its hash: {{ include "Brewfile" | sha256sum }}).
+# Never upgrades or uninstalls anything.
+set -euo pipefail
+
+if ! command -v brew >/dev/null && [[ -x /opt/homebrew/bin/brew ]]; then
+	eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+if ! command -v brew >/dev/null; then
+	echo "brew-bundle: Homebrew isn't installed: install it from https://brew.sh, then run chezmoi apply again" >&2
+	exit 1
+fi
+
+brew bundle --no-upgrade --file={{ joinPath .chezmoi.sourceDir "Brewfile" | quote }}
+{{ end -}}
