@@ -23,6 +23,9 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 autoload -Uz compinit
 if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
 	compinit
+	# a full compinit leaves an unchanged dump untouched, so without this the
+	# dump stays "old" and every later shell repeats the slow scan
+	touch "${ZDOTDIR:-$HOME}/.zcompdump"
 else
 	compinit -C
 fi
