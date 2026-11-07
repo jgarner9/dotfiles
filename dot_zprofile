@@ -1,5 +1,9 @@
+# macOS login shells only: environment, never aliases. zellij panes are
+# non-login shells and inherit this environment but not aliases, so aliases
+# live in ~/.config/zsh/macos.zsh.
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-alias python="python3"
-alias ssh-reload="sudo launchctl stop com.openssh.sshd && sudo launchctl start com.openssh.sshd"
 
+# load keychain-stored keys into ssh-agent at login: git signs commits with
+# the public key path in ~/.config/git/config, which needs the private key in
+# the agent before the first commit, not only after the first ssh connection
 ssh-add --apple-load-keychain &>/dev/null &!

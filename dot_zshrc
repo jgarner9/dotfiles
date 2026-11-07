@@ -88,9 +88,6 @@ if [[ -s "$NVM_DIR/nvm.sh" ]]; then
 	npx() { _load_nvm && npx "$@" }
 fi
 
-# load .zprofile if not a login shell (zellij handling, non-login shells on launch)
-[[ -o login ]] || source "$HOME/.zprofile"
-
 # OS-specific config last, so it can override anything above (and so the
 # Arch file's syntax-highlighting plugin loads after everything else)
 case $OSTYPE in
