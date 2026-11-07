@@ -1,3 +1,8 @@
+# keep PATH entries unique: nested shells (zellij panes) re-run the PATH
+# lines below, and without this each one adds another copy (both names:
+# -U on the array alone doesn't cover assignments to the PATH string)
+typeset -U path PATH
+
 # history
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000
