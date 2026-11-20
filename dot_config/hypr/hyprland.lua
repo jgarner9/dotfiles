@@ -192,6 +192,8 @@ hl.config({
 
 hl.config({
 	misc = {
+		mouse_move_enables_dpms = true,
+		key_press_enables_dpms = false,
 		force_default_wallpaper = 0, -- Set to 0 or 1 to disable the anime mascot wallpapers (hyprpaper handles wallpapers)
 		disable_hyprland_logo = true, -- If true disables the random hyprland logo / anime girl background. :(
 	},
@@ -240,6 +242,17 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("loginctl lock-session"))
+hl.bind(mainMod .. " + ALT + T", hl.dsp.exec_cmd("loginctl lock-session"))
+hl.bind(
+	mainMod .. " + ALT + SHIFT + T",
+	hl.dsp.exec_cmd([[
+		logger -t hypr-suspend "Suspend shortcut pressed"
+		sleep 0.5
+		hyprctl dispatch 'hl.dsp.dpms({action = "off"})' | systemd-cat -t hypr-suspend
+		systemd-cat -t hypr-suspend systemctl suspend || hyprctl dispatch 'hl.dsp.dpms({action = "on"})'
+	]]),
+	{ description = "Suspend and turn off displays" }
+)
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }))
 hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exit())
 
@@ -248,6 +261,12 @@ hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
+
+-- Move the active window to the previous or next existing workspace and follow it.
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ workspace = "e-1", follow = true }))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ workspace = "e+1", follow = true }))
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ workspace = "e-1", follow = true }))
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ workspace = "e+1", follow = true }))
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]

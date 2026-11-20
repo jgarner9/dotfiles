@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Lock screen preview</title>
+  <style>
+    :root {
+      --background: #101411;
+      --ink: #e1e8df;
+      --muted: #93a096;
+      --sage: #aac29d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--ink);
+      font: 400 16px/1 "Noto Sans Mono", monospace;
+    }
+    main {
+      position: relative;
+      min-height: 330px;
+      height: 100vh;
+      height: 100svh;
+    }
+    .status {
+      position: absolute;
+      top: clamp(18px, 4vh, 36px);
+      left: clamp(20px, 4vw, 48px);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .status span { color: var(--sage); }
+    .center {
+      position: absolute;
+      top: calc(50% + var(--offset));
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+    }
+    #clock {
+      --offset: -190px;
+      font-size: clamp(62px, 16vw, 96px);
+      font-variant-numeric: tabular-nums;
+    }
+    #date {
+      --offset: -100px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .account {
+      --offset: -44px;
+      color: var(--sage);
+      font-size: 15px;
+    }
+    .prompt {
+      --offset: 0px;
+      width: min(288px, calc(100% - 40px));
+      height: 44px;
+      background: #171d18;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      color: var(--muted);
+    }
+    @media (max-height: 540px) {
+      #clock { --offset: -118px; font-size: 62px; }
+      #date { --offset: -68px; }
+      .account { --offset: -39px; }
+    }
+  </style>
+</head>
+<body>
+  <main aria-label="Lock screen preview">
+    <div class="status"><span aria-hidden="true">■</span> session locked</div>
+    <time id="clock" class="center"></time>
+    <div id="date" class="center"></div>
+    <div class="account center">jgarner@homie</div>
+    <div class="prompt center">password</div>
+  </main>
+  <script>
+    const clock = document.getElementById("clock");
+    const date = document.getElementById("date");
+    const formatTime = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" });
+    const formatDate = new Intl.DateTimeFormat("en-US", {
+      weekday: "long", month: "long", day: "numeric"
+    });
+    function refresh() {
+      const now = new Date();
+      clock.textContent = formatTime.format(now);
+      clock.dateTime = clock.textContent;
+      date.textContent = formatDate.format(now);
+      setTimeout(refresh, 60000 - now.getTime() % 60000);
+    }
+    refresh();
+  </script>
+</body>
+</html>
