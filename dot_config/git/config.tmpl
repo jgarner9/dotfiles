@@ -1,0 +1,13 @@
+# Git's per-user config, shared by every machine. Lives at the XDG path
+# (~/.config/git/config) so macOS and Linux use the same file; the signing
+# key path is templated because the home dir differs between them.
+[user]
+	name = jgarner9
+	email = garnerjasonj@icloud.com
+	signingkey = {{ .chezmoi.homeDir }}/.ssh/id_ed25519_git.pub
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[pull]
+	rebase = true

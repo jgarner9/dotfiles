@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
-set -eui
+set -euo pipefail
 set -x
 
 createKey() {
-  location="$HOME/.ssh/id_ed25519_$1"
+  local location="$HOME/.ssh/id_ed25519_$1"
+  # ssh-keygen reports to stdout, which the caller's $(...) would capture
+  # along with the path; send it to the terminal instead. The explicit
+  # return is needed because bash turns off set -e inside $(...).
   ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)-$1" \
-    -f "$location"
+    -f "$location" >&2 || return
 
-  return "$location"
+  echo "$location"
 }
 
 archieSpot="$(createKey "archie")"

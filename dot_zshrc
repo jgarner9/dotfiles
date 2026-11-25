@@ -1,3 +1,8 @@
+# keep PATH entries unique: nested shells (zellij panes) re-run the PATH
+# lines below, and without this each one adds another copy (both names:
+# -U on the array alone doesn't cover assignments to the PATH string)
+typeset -U path PATH
+
 # history
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000
@@ -5,8 +10,10 @@ SAVEHIST=10000
 setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 
 # MR JASON'S SUPER AWESOME ALIASES
-alias ls="ls --color -F"
-alias spm="sudo pacman"
+# (OS-specific ones live in ~/.config/zsh/arch.zsh and macos.zsh)
+alias home="ssh jgarner@archie.husky-cobia.ts.net"
+alias kb="cargo run --bin tantivy-kb -- --wiki-dir ./wiki"
+alias test-type="thokr"
 if command -v bat >/dev/null; then
 	alias cat="bat"
 fi
@@ -21,6 +28,9 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 autoload -Uz compinit
 if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
 	compinit
+	# a full compinit leaves an unchanged dump untouched, so without this the
+	# dump stays "old" and every later shell repeats the slow scan
+	touch "${ZDOTDIR:-$HOME}/.zcompdump"
 else
 	compinit -C
 fi
@@ -48,16 +58,14 @@ PROMPT+='%(?.%F{green}.%F{red})❯%f '
 bindkey '^[[A' history-beginning-search-backward
 bindkey '^[[B' history-beginning-search-forward
 
-if [[ -f $HOME/.local/bin/env ]]; then
-	. "$HOME/.local/bin/env"
-fi
+# personal tools (dotfiles dot_local/bin)
+export PATH="$HOME/.local/bin:$PATH"
 
-if command -v zellij >/dev/null; then
-	# exit the shell when zellij exits, so closing zellij closes the window
-	# (pairs with on_force_close "quit" in the zellij config)
-	export ZELLIJ_AUTO_EXIT=true
-	eval "$(zellij setup --generate-auto-start zsh)"
-fi
+# bud is the editor; kitty and zellij pick this up instead of naming one
+export EDITOR="bud"
+export VISUAL="bud"
+
+# dotfiles don't auto-sync; run `chezmoi update` by hand to pull and apply
 
 if command -v zoxide >/dev/null; then
 	eval "$(zoxide init --cmd cd zsh)"
@@ -77,16 +85,11 @@ if [[ -s "$NVM_DIR/nvm.sh" ]]; then
 	npx() { _load_nvm && npx "$@" }
 fi
 
-# source plugins (syntax-highlighting must stay last)
-if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-	source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-	source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
-
-# Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-
-# Added by cua-driver-rs installer — see https://github.com/trycua/cua
-export PATH="/Users/jgarner/.local/bin:$PATH"
+# OS-specific config last, so it can override anything above (and so the
+# Arch file's syntax-highlighting plugin loads after everything else)
+case $OSTYPE in
+	darwin*) _os_zshrc="$HOME/.config/zsh/macos.zsh" ;;
+	linux*) _os_zshrc="$HOME/.config/zsh/arch.zsh" ;;
+esac
+[[ -n ${_os_zshrc:-} && -f $_os_zshrc ]] && source "$_os_zshrc"
+unset _os_zshrc
