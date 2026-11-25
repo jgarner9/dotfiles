@@ -28,6 +28,7 @@ Brewfile
 Documents/Backgrounds
 Documents/Backgrounds/**
 .config/zsh/arch.zsh
+arch-ssh-agent.sh
 {{ end }}
 
 {{ if ne .chezmoi.os "darwin" }}

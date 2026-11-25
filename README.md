@@ -44,6 +44,22 @@ reruns it whenever the file changes. Some settings need a logout.
 
 ## Git
 
+### SSH agent (Arch)
+
+`chezmoi apply` enables the systemd user socket supplied by Arch's `openssh`
+package. New zsh shells use that shared agent, while preserving an inherited
+agent (including SSH forwarding). After applying in an existing terminal, run:
+
+```sh
+source ~/.config/zsh/arch.zsh
+ssh-add ~/.ssh/id_ed25519_git
+```
+
+Unlock each key once per agent lifetime (usually until logout or reboot).
+SSH also adds keys automatically on first use via `AddKeysToAgent`.
+Load the Git key with `ssh-add` before signing a commit without first using SSH.
+macOS uses its existing Keychain setup.
+
 `dot_config/git/config.tmpl` is the shared git config at `~/.config/git/config`.
 The signing key path comes from the home dir, so the same file works on both
 OSes. Don't keep a `~/.gitconfig` as well: git reads both, and settings in
