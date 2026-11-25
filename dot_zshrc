@@ -59,7 +59,6 @@ bindkey '^[[A' history-beginning-search-backward
 bindkey '^[[B' history-beginning-search-forward
 
 # personal tools (dotfiles dot_local/bin)
-# land here; set before zellij starts so every pane inherits it
 export PATH="$HOME/.local/bin:$PATH"
 
 # bud is the editor; kitty and zellij pick this up instead of naming one
@@ -67,16 +66,6 @@ export EDITOR="bud"
 export VISUAL="bud"
 
 # dotfiles don't auto-sync; run `chezmoi update` by hand to pull and apply
-
-# not over SSH: you're usually already inside a local zellij, and a nested
-# one loses its keybinds to the outer session (run `zellij attach -c` by
-# hand for a remote session that survives disconnects)
-if command -v zellij >/dev/null && [[ -z $SSH_CONNECTION ]]; then
-	# exit the shell when zellij exits, so closing zellij closes the window
-	# (pairs with on_force_close "quit" in the zellij config)
-	export ZELLIJ_AUTO_EXIT=true
-	eval "$(zellij setup --generate-auto-start zsh)"
-fi
 
 if command -v zoxide >/dev/null; then
 	eval "$(zoxide init --cmd cd zsh)"
