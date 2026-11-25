@@ -243,16 +243,6 @@ hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("loginctl lock-session"))
 hl.bind(mainMod .. " + ALT + T", hl.dsp.exec_cmd("loginctl lock-session"))
-hl.bind(
-	mainMod .. " + ALT + SHIFT + T",
-	hl.dsp.exec_cmd([[
-		logger -t hypr-suspend "Suspend shortcut pressed"
-		sleep 0.5
-		hyprctl dispatch 'hl.dsp.dpms({action = "off"})' | systemd-cat -t hypr-suspend
-		systemd-cat -t hypr-suspend systemctl suspend || hyprctl dispatch 'hl.dsp.dpms({action = "on"})'
-	]]),
-	{ description = "Suspend and turn off displays" }
-)
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }))
 hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exit())
 
